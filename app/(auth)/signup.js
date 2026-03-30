@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import { useRouter } from "expo-router";
 
 const API_URL = "https://site--gift-squad-back--r62dpvlsxwvq.code.run";
@@ -37,7 +44,10 @@ export default function SignupScreen() {
       const data = await response.json();
 
       if (!response.ok) {
-        return Alert.alert("Erreur", data.message || "Erreur lors de la creation du compte");
+        return Alert.alert(
+          "Erreur",
+          data.message || "Erreur lors de la creation du compte",
+        );
       }
 
       await login(data.token, data.user);

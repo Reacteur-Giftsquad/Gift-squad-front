@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import { useRouter } from "expo-router";
 
 const API_URL = "https://site--gift-squad-back--r62dpvlsxwvq.code.run";
@@ -21,7 +28,10 @@ export default function LoginScreen() {
       const data = await response.json();
 
       if (!response.ok) {
-        return Alert.alert("Erreur", data.message || "Email ou mot de passe incorrect");
+        return Alert.alert(
+          "Erreur",
+          data.message || "Email ou mot de passe incorrect",
+        );
       }
 
       await login(data.token, data.user);
@@ -35,7 +45,12 @@ export default function LoginScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
       <TextInput placeholder="Email" onChangeText={setEmail} value={email} />
-      <TextInput placeholder="Password" secureTextEntry onChangeText={setPassword} value={password} />
+      <TextInput
+        placeholder="Password"
+        secureTextEntry
+        onChangeText={setPassword}
+        value={password}
+      />
       <TouchableOpacity onPress={handleLogin}>
         <Text>Se connecter</Text>
       </TouchableOpacity>

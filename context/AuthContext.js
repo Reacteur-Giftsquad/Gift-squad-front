@@ -11,12 +11,14 @@ export function AuthProvider({ children }) {
     setToken(newToken);
     setUser(userData);
     await AsyncStorage.setItem("token", newToken);
+    await AsyncStorage.setItem("user");
   };
 
   const logout = async () => {
     setUser(null);
     setToken(null);
     await AsyncStorage.removeItem("token");
+    await AsyncStorage.removeItem("user");
   };
 
   return (
