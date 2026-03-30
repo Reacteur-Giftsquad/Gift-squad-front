@@ -9,6 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
+import axios from "axios";
 
 const API_URL = "https://site--gift-squad-back--r62dpvlsxwvq.code.run";
 
@@ -20,24 +21,21 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      const { data } = await axios.post(`${API_URL}/auth/login`, {
+        email,
+        password,
       });
-      const data = await response.json();
-
-      if (!response.ok) {
-        return Alert.alert(
-          "Erreur",
-          data.message || "Email ou mot de passe incorrect",
-        );
-      }
-
       await login(data.token, data.user);
       router.push("/home");
     } catch (error) {
-      Alert.alert("Erreur", "Impossible de se connecter au serveur");
+      if (error.response) {
+        Alert.alert(
+          "Erreur",
+          error.response.data.message || "Email ou mot de passe incorrect",
+        );
+      } else {
+        Alert.alert("Erreur", "Impossible de se connecter au serveur");
+      }
     }
   };
 
@@ -60,18 +58,3 @@ export default function LoginScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-});
