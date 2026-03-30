@@ -1,14 +1,8 @@
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
-import {
-  StyleSheet,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { useAuth } from "../../context/AuthContext";
+import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useRouter } from "expo-router";
+import styles from "../../styles/signupStyles";
 import axios from "axios";
 
 const API_URL = "https://site--gift-squad-back--r62dpvlsxwvq.code.run";
