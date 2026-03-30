@@ -5,7 +5,7 @@ import { useRouter } from "expo-router";
 import styles from "../../styles/loginStyles";
 import axios from "axios";
 
-const API_URL = "https://site--gift-squad-back--r62dpvlsxwvq.code.run";
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
