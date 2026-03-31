@@ -13,7 +13,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     try {
-      const { data } = await api.post("/auth/login", {
+      const { data } = await api.post("/user/login", {
         email,
         password,
       });
