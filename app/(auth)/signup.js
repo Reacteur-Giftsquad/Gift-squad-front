@@ -9,11 +9,12 @@ export default function SignupScreen() {
   const [form, setForm] = useState({
     firstname: "",
     lastname: "",
-    username: "",
+    pseudo: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+
   const { login } = useAuth();
   const router = useRouter();
 
@@ -23,10 +24,10 @@ export default function SignupScreen() {
     }
 
     try {
-      const { data } = await api.post("/auth/signup", {
+      const { data } = await api.post(`${API_URL}/user/signup`, {
         firstname: form.firstname,
         lastname: form.lastname,
-        username: form.username,
+        pseudo: form.pseudo,
         email: form.email,
         password: form.password,
       });
@@ -59,8 +60,8 @@ export default function SignupScreen() {
       />
       <TextInput
         placeholder="Pseudo"
-        onChangeText={(v) => setForm({ ...form, username: v })}
-        value={form.username}
+        onChangeText={(v) => setForm({ ...form, pseudo: v })}
+        value={form.pseudo}
       />
       <TextInput
         placeholder="Email"
