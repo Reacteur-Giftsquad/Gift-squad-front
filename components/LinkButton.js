@@ -4,7 +4,9 @@ import colors from "../assets/colors/colors.json";
 const LinkButton = ({ text, onPress, icon }) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
-      {icon}<Text style={styles.text}>{text}</Text>
+      <Text style={styles.text}>
+        {icon} {text}
+      </Text>
     </TouchableOpacity>
   );
 };
