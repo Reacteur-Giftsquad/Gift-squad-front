@@ -1,10 +1,13 @@
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import colors from "../assets/colors/colors.json";
 
 const LinkButton = ({ text, onPress, icon }) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
-      {icon}<Text style={styles.text}>{text}</Text>
+      <View style={styles.buttonContent}>
+        <Text>{icon}</Text>
+        <Text style={styles.text}>{text}</Text>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -15,10 +18,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+  },
+  buttonContent: {
+    alignItems: "center",
+    flexDirection: "row",
     gap: 10,
   },
   text: {
-    fontSize: 18,
     color: colors.green,
     textAlign: "center",
   },

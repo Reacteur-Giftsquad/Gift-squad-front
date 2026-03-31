@@ -13,8 +13,7 @@ const Header = ({ title }) => {
 const styles = StyleSheet.create({
   header: {
     backgroundColor: colors.green,
-    // paddingBlock: 20,
-    paddingBlockStart: Constants.statusBarHeight,
+    paddingBlockStart: Constants.statusBarHeight + 10,
     paddingBlockEnd: 20,
   },
   title: {
