@@ -3,9 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import styles from "../../styles/loginStyles";
-import axios from "axios";
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL;
+import api from "../../utils/api";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -15,7 +13,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     try {
-      const { data } = await axios.post(`${API_URL}/auth/login`, {
+      const { data } = await api.post("/auth/login", {
         email,
         password,
       });
