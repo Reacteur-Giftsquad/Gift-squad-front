@@ -14,6 +14,7 @@ export default function SignupScreen() {
     password: "",
     confirmPassword: "",
   });
+
   const { login } = useAuth();
   const router = useRouter();
 
@@ -23,7 +24,7 @@ export default function SignupScreen() {
     }
 
     try {
-      const { data } = await api.post("/user/signup", {
+      const { data } = await api.post(`${API_URL}/user/signup`, {
         firstname: form.firstname,
         lastname: form.lastname,
         pseudo: form.pseudo,
