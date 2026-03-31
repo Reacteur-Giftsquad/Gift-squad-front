@@ -3,12 +3,14 @@ import { useAuth } from "../../context/AuthContext";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import styles from "../../styles/loginStyles";
-import axios from "axios";
 import Header from "../../components/Header";
 import { StatusBar } from "expo-status-bar";
 import Input from "../../components/Input";
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 import api from "../../utils/api";
+import SubmitButton from "../../components/SubmitButton";
+import LinkButton from "../../components/LinkButton";
+import colors from "../../assets/colors/colors.json";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -53,14 +55,26 @@ export default function LoginScreen() {
           value={password}
           type="password"
         />
-        <TouchableOpacity onPress={handleLogin}>
-          <Text>Se connecter</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => router.push("/signup")}>
-          <Text>Pas encore de compte ? S'inscrire</Text>
-        </TouchableOpacity>
+        <SubmitButton
+          icon={<MaterialIcons name="login" size={24} color="white" />}
+          text="Se connecter"
+          onPress={handleLogin}
+        />
+        <LinkButton
+          text={"Pas encore de compte ? Créez-en un !"}
+          onPress={() => router.push("/signup")}
+          icon={
+            <MaterialIcons
+              name="person-add-alt-1"
+              size={24}
+              color={colors.green}
+            />
+          }
+        />
       </View>
       <StatusBar style="light" />
     </View>
   );
 }
+
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
