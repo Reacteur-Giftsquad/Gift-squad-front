@@ -1,17 +1,15 @@
-import { Pressable, StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import colors from "../assets/colors/colors.json";
 
-const SubmitButton = ({ icon, text, onPress }) => {
+const LinkButton = ({ text, onPress, icon }) => {
   return (
-    <Pressable style={styles.button} onPress={onPress}>
+    <TouchableOpacity style={styles.button} onPress={onPress}>
       {icon} <Text style={styles.text}>{text}</Text>
-    </Pressable>
+    </TouchableOpacity>
   );
 };
-
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: colors.green,
     padding: 12,
     borderRadius: 5,
     flexDirection: "row",
@@ -21,8 +19,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
-    color: "white",
+    color: colors.green,
     textAlign: "center",
   },
 });
-export default SubmitButton;
+export default LinkButton;
