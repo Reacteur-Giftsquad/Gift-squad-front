@@ -3,9 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import styles from "../../styles/signupStyles";
-import axios from "axios";
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL;
+import api from "../../utils/api";
 
 export default function SignupScreen() {
   const [form, setForm] = useState({
@@ -26,7 +24,7 @@ export default function SignupScreen() {
     }
 
     try {
-      const { data } = await axios.post(`${API_URL}/user/signup`, {
+      const { data } = await api.post(`${API_URL}/user/signup`, {
         firstname: form.firstname,
         lastname: form.lastname,
         pseudo: form.pseudo,

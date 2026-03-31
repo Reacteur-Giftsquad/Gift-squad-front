@@ -8,6 +8,7 @@ import Header from "../../components/Header";
 import { StatusBar } from "expo-status-bar";
 import Input from "../../components/Input";
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
+import api from "../../utils/api";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -17,7 +18,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     try {
-      const { data } = await axios.post(`${API_URL}/user/login`, {
+      const { data } = await api.post(`${API_URL}/user/login`, {
         email,
         password,
       });
