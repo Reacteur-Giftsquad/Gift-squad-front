@@ -14,7 +14,8 @@ export default function SignupScreen() {
     password: "",
     confirmPassword: "",
   });
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const { login } = useAuth();
   const router = useRouter();
 
@@ -24,7 +25,7 @@ export default function SignupScreen() {
     }
 
     try {
-      const { data } = await api.post(`${API_URL}/user/signup`, {
+      const { data } = await api.post("/user/signup", {
         firstname: form.firstname,
         lastname: form.lastname,
         pseudo: form.pseudo,
@@ -65,21 +66,42 @@ export default function SignupScreen() {
       />
       <TextInput
         placeholder="Email"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoComplete="email"
         onChangeText={(v) => setForm({ ...form, email: v })}
         value={form.email}
       />
-      <TextInput
-        placeholder="Mot de passe"
-        secureTextEntry
-        onChangeText={(v) => setForm({ ...form, password: v })}
-        value={form.password}
-      />
-      <TextInput
-        placeholder="Confirmer le mot de passe"
-        secureTextEntry
-        onChangeText={(v) => setForm({ ...form, confirmPassword: v })}
-        value={form.confirmPassword}
-      />
+      <View style={{ width: "100%", justifyContent: "center" }}>
+        <TextInput
+          placeholder="Mot de passe"
+          secureTextEntry={!showPassword}
+          onChangeText={(v) => setForm({ ...form, password: v })}
+          value={form.password}
+          style={{ textAlign: "center" }}
+        />
+        <TouchableOpacity
+          onPress={() => setShowPassword(!showPassword)}
+          style={{ position: "absolute", right: 10 }}
+        >
+          <Text>{showPassword ? "🙈" : "👁️"}</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={{ width: "100%", justifyContent: "center" }}>
+        <TextInput
+          placeholder="Confirmer le mot de passe"
+          secureTextEntry={!showConfirm}
+          onChangeText={(v) => setForm({ ...form, confirmPassword: v })}
+          value={form.confirmPassword}
+          style={{ textAlign: "center" }}
+        />
+        <TouchableOpacity
+          onPress={() => setShowConfirm(!showConfirm)}
+          style={{ position: "absolute", right: 10 }}
+        >
+          <Text>{showConfirm ? "🙈" : "👁️"}</Text>
+        </TouchableOpacity>
+      </View>
       <TouchableOpacity onPress={handleSignup}>
         <Text>Creer mon compte</Text>
       </TouchableOpacity>

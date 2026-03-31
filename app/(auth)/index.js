@@ -6,21 +6,22 @@ import styles from "../../styles/loginStyles";
 import Header from "../../components/Header";
 import { StatusBar } from "expo-status-bar";
 import Input from "../../components/Input";
-const API_URL = process.env.EXPO_PUBLIC_API_URL;
 import api from "../../utils/api";
 import SubmitButton from "../../components/SubmitButton";
 import LinkButton from "../../components/LinkButton";
 import colors from "../../assets/colors/colors.json";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
   const router = useRouter();
 
   const handleLogin = async () => {
     try {
-      const { data } = await api.post(`${API_URL}/user/login`, {
+      const { data } = await api.post("/user/login", {
         email,
         password,
       });
@@ -76,5 +77,3 @@ export default function LoginScreen() {
     </View>
   );
 }
-
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
