@@ -16,6 +16,7 @@ export default function SignupScreen() {
     password: "",
     confirmPassword: "",
   });
+
   const { login } = useAuth();
   const router = useRouter();
 
