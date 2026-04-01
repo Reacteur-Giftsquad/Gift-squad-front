@@ -42,7 +42,7 @@ export default function CreateEvent() {
         creator: user._id,
       });
       Alert.alert("Succes", "Événement créé !", [
-        { text: "OK", onPress: () => router.replace("/(main)/") },
+        { text: "OK", onPress: () => router.replace("/(main)/events") },
       ]);
     } catch (error) {
       if (error.response) {

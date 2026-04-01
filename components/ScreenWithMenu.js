@@ -84,7 +84,7 @@ export default function ScreenWithMenu({ title, children }) {
                   style={styles.menuItem}
                   onPress={() => {
                     setMenuOpen(false);
-                    router.replace("/(main)/");
+                    router.replace("/(main)/events");
                   }}>
                   <MaterialIcons
                     name="calendar-month"
