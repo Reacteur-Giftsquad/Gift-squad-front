@@ -1,20 +1,35 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import colors from "../assets/colors/colors.json";
 
-const SubmitButton = ({ icon, text, onPress }) => {
+const SubmitButton = ({ icon, text, onPress, red, isSubmitting }) => {
   return (
-    <Pressable style={styles.button} onPress={onPress}>
-      <View style={styles.buttonContent}>
-        <Text>{icon}</Text>
-        <Text style={styles.text}>{text}</Text>
-      </View>
+    <Pressable
+      style={[
+        styles.button,
+        { backgroundColor: red ? colors.red : colors.green },
+      ]}
+      onPress={onPress}
+      disabled={isSubmitting}>
+      {isSubmitting ? (
+        <ActivityIndicator color="white" />
+      ) : (
+        <View style={styles.buttonContent}>
+          <Text>{icon}</Text>
+          <Text style={styles.text}>{text}</Text>
+        </View>
+      )}
     </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: colors.green,
     padding: 12,
     borderRadius: 5,
     justifyContent: "center",
