@@ -11,7 +11,7 @@ export function AuthProvider({ children }) {
     setToken(newToken);
     setUser(userData);
     await AsyncStorage.setItem("token", newToken);
-    await AsyncStorage.setItem("user");
+    await AsyncStorage.setItem("user", JSON.stringify(userData));
   };
 
   const logout = async () => {

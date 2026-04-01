@@ -12,10 +12,8 @@ const LOCAL_URL = debuggerHost ? `http://${debuggerHost}:${LOCAL_PORT}` : null;
 
 const api = axios.create({ timeout: 5000 });
 
-let baseURL = null;
-
-async function getBaseURL() {
-  if (baseURL) return baseURL;
+const baseURLReady = (async () => {
+  let baseURL;
 
   if (LOCAL_URL) {
     try {
@@ -30,9 +28,11 @@ async function getBaseURL() {
 
   api.defaults.baseURL = baseURL;
   console.log("API using:", baseURL);
-  return baseURL;
-}
+})();
 
-getBaseURL();
+api.interceptors.request.use(async (config) => {
+  await baseURLReady;
+  return config;
+});
 
 export default api;
