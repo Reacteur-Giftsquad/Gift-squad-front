@@ -1,20 +1,91 @@
-import { StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import { Alert, ScrollView } from "react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import api from "../../../utils/api";
+import { useAuth } from "../../../context/AuthContext";
+import styles from "../../../styles/globals";
+import Input from "../../../components/Input";
+import SubmitButton from "../../../components/SubmitButton";
+import Title from "../../../components/Title";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import ScreenWithMenu from "../../../components/ScreenWithMenu";
 
-export default function createEvent() {
+const TYPE_LABELS = {
+  secretSanta: "Secret Santa",
+  birthday: "Anniversaire",
+  christmasList: "Liste de Noël",
+};
+
+export default function CreateEvent() {
+  const { type } = useLocalSearchParams();
+  const { user } = useAuth();
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [form, setForm] = useState({
+    title: "",
+    date: "",
+    description: "",
+  });
+
+  const handleCreate = async () => {
+    if (!form.title || !form.date) {
+      return Alert.alert("Erreur", "Le titre et la date sont obligatoires");
+    }
+
+    setIsSubmitting(true);
+    try {
+      await api.post("/events/create", {
+        title: form.title,
+        type: TYPE_LABELS[type] || type,
+        date: form.date,
+        description: form.description,
+        creator: user._id,
+      });
+      Alert.alert("Succes", "Événement créé !", [
+        { text: "OK", onPress: () => router.replace("/(main)/") },
+      ]);
+    } catch (error) {
+      if (error.response) {
+        Alert.alert(
+          "Erreur",
+          error.response.data.message || "Erreur lors de la création",
+        );
+      } else {
+        Alert.alert("Erreur", "Impossible de se connecter au serveur");
+      }
+    }
+    setIsSubmitting(false);
+  };
+
   return (
     <ScreenWithMenu title="Créer un événement">
-      <View style={styles.container}>
-        <Text>This is the createEvent component</Text>
-      </View>
+      <ScrollView contentContainerStyle={styles.content}>
+        <Title text={TYPE_LABELS[type] || "Nouvel événement"} heading="h1" />
+        <Input
+          title="Titre"
+          placeholder="Nom de l'événement"
+          setState={(v) => setForm({ ...form, title: v })}
+          value={form.title}
+        />
+        <Input
+          title="Date"
+          placeholder="JJ/MM/AAAA"
+          setState={(v) => setForm({ ...form, date: v })}
+          value={form.date}
+        />
+        <Input
+          title="Description"
+          placeholder="Description (optionnel)"
+          setState={(v) => setForm({ ...form, description: v })}
+          value={form.description}
+        />
+        <SubmitButton
+          text="Créer l'événement"
+          icon={<MaterialIcons name="add" size={24} color="white" />}
+          onPress={handleCreate}
+          isSubmitting={isSubmitting}
+        />
+      </ScrollView>
     </ScreenWithMenu>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
