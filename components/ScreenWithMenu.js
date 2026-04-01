@@ -82,8 +82,9 @@ export default function ScreenWithMenu({ title, children }) {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.menuItem}
-                  onPress={async () => {
-                    router.replace("/");
+                  onPress={() => {
+                    setMenuOpen(false);
+                    router.replace("/(main)/");
                   }}>
                   <MaterialIcons
                     name="calendar-month"
@@ -94,8 +95,9 @@ export default function ScreenWithMenu({ title, children }) {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.menuItem}
-                  onPress={async () => {
-                    router.replace("/(newEvent)/createEvent");
+                  onPress={() => {
+                    setMenuOpen(false);
+                    router.replace("/(main)/(newEvent)/");
                   }}>
                   <Feather name="plus" size={22} color={colors.gray} />
                   <Text style={styles.menuItemText}>Créer un événement</Text>

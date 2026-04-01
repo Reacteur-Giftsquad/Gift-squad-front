@@ -8,7 +8,7 @@ import ScreenWithMenu from "../../../components/ScreenWithMenu";
 export default function CreateEvent() {
   const router = useRouter();
   return (
-    <ScreenWithMenu>
+    <ScreenWithMenu title="Créer un événement">
       <View style={styles.content}>
         <Title
           text="Quel type d'événement souhaitez-vous créer ?"
@@ -16,7 +16,7 @@ export default function CreateEvent() {
         />
         <SubmitButton
           text="Secret Santa"
-          onsPress={() => {
+          onPress={() => {
             router.push({
               pathname: "/createEvent",
               params: { type: "secretSanta" },
@@ -25,7 +25,7 @@ export default function CreateEvent() {
         />
         <SubmitButton
           text="Anniversaire"
-          onsPress={() => {
+          onPress={() => {
             router.push({
               pathname: "/createEvent",
               params: { type: "birthday" },
@@ -34,7 +34,7 @@ export default function CreateEvent() {
         />
         <SubmitButton
           text="Liste de Noël"
-          onsPress={() => {
+          onPress={() => {
             router.push({
               pathname: "/createEvent",
               params: { type: "christmasList" },
