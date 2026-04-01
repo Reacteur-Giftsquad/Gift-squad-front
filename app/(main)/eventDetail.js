@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import {
   View,
   Text,
-  StyleSheet,
   ActivityIndicator,
   ScrollView,
   TextInput,
   TouchableOpacity,
   Alert,
+  Modal,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import api from "../../utils/api";
@@ -18,7 +18,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import SubmitButton from "../../components/SubmitButton";
 import Title from "../../components/Title";
-import Constants from "expo-constants";
+import styles from "../../styles/eventDetailStyles";
 
 export default function EventDetail() {
   const { id } = useLocalSearchParams();
@@ -28,6 +28,7 @@ export default function EventDetail() {
   const [isLoading, setIsLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [contributions, setContributions] = useState([]);
+  const [showDrawModal, setShowDrawModal] = useState(false);
 
   const fetchEvent = async () => {
     try {
@@ -82,8 +83,24 @@ export default function EventDetail() {
 
   if (!event) return null;
 
+  const isSecretSanta = event.type === "Secret Santa";
   const totalCollected = contributions.reduce((sum, c) => sum + (c.amount || 0), 0);
   const participatingCount = contributions.length;
+
+  const handleConfirmDraw = async () => {
+    setShowDrawModal(false);
+    try {
+      await api.post(`/events/draw/${id}`);
+      Alert.alert("Succes", "Le tirage au sort a été effectué !");
+      fetchEvent();
+    } catch (error) {
+      if (error.response) {
+        Alert.alert("Erreur", error.response.data.message || "Erreur");
+      } else {
+        Alert.alert("Erreur", "Impossible de se connecter au serveur");
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -105,19 +122,30 @@ export default function EventDetail() {
           {event.budget > 0 && (
             <View style={styles.budgetBar}>
               <Text style={styles.budgetAmount}>
-                € {totalCollected} COLLECTÉS
+                {isSecretSanta
+                  ? `BUDGET CONSEILLÉ : ${event.budget}€`
+                  : `€ ${totalCollected} COLLECTÉS`}
               </Text>
-              <Text style={styles.budgetSub}>
-                {participatingCount}/{event.members?.length || 0} PARTICIPANTS PARTICIPENT
-              </Text>
+              {!isSecretSanta && (
+                <Text style={styles.budgetSub}>
+                  {participatingCount}/{event.members?.length || 0} PARTICIPANTS PARTICIPENT
+                </Text>
+              )}
             </View>
           )}
 
-          <SubmitButton
-            text="Liste de cadeaux"
-            icon={<FontAwesome6 name="gift" size={20} color="white" />}
-            onPress={() => {}}
-          />
+          {!isSecretSanta && (
+            <SubmitButton
+              text="Liste de cadeaux"
+              icon={<FontAwesome6 name="gift" size={20} color="white" />}
+              onPress={() =>
+                router.push({
+                  pathname: "/(main)/giftList",
+                  params: { eventId: id, eventName: event.name },
+                })
+              }
+            />
+          )}
         </View>
 
         <View style={styles.participantsSection}>
@@ -137,16 +165,18 @@ export default function EventDetail() {
                   {member.pseudo || member.firstname}
                   {isYou && <Text style={styles.youLabel}>  (vous)</Text>}
                 </Text>
-                {contribution ? (
-                  <Text style={styles.contributionBadge}>
-                    {contribution.amount}€
-                  </Text>
-                ) : isYou ? (
-                  <TouchableOpacity style={styles.participateBtn}>
-                    <Text style={styles.participateBtnText}>Participer</Text>
-                  </TouchableOpacity>
-                ) : (
-                  <MaterialIcons name="hourglass-empty" size={20} color={colors.gray} />
+                {!isSecretSanta && (
+                  contribution ? (
+                    <Text style={styles.contributionBadge}>
+                      {contribution.amount}€
+                    </Text>
+                  ) : isYou ? (
+                    <TouchableOpacity style={styles.participateBtn}>
+                      <Text style={styles.participateBtnText}>Participer</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <MaterialIcons name="hourglass-empty" size={20} color={colors.gray} />
+                  )
                 )}
               </View>
             );
@@ -167,137 +197,59 @@ export default function EventDetail() {
             </TouchableOpacity>
           </View>
         </View>
+
+        {isSecretSanta && (
+          <View style={styles.drawSection}>
+            <SubmitButton
+              text="Effectuer le tirage au sort"
+              onPress={() => setShowDrawModal(true)}
+            />
+          </View>
+        )}
       </ScrollView>
+
+      <Modal visible={showDrawModal} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalBox}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>CONFIRMATION DU TIRAGE</Text>
+              <TouchableOpacity onPress={() => setShowDrawModal(false)}>
+                <MaterialIcons name="close" size={24} color="#333" />
+              </TouchableOpacity>
+            </View>
+
+            <Text style={styles.modalWarningIcon}>&#9888;</Text>
+
+            <Text style={styles.modalText}>
+              Êtes-vous sûr de vouloir effectuer le tirage au sort ?
+            </Text>
+            <Text style={styles.modalTextBold}>
+              Attention : <Text style={{ fontWeight: "normal" }}>Cette action est irréversible.</Text>
+            </Text>
+
+            <View style={styles.modalBullets}>
+              <Text style={styles.modalBullet}>•  Tous les participants seront notifiés par email</Text>
+              <Text style={styles.modalBullet}>•  Il ne sera plus possible d'ajouter de nouveaux participants</Text>
+              <Text style={styles.modalBullet}>•  Le résultat du tirage sera définitif</Text>
+            </View>
+
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={styles.modalCancelBtn}
+                onPress={() => setShowDrawModal(false)}
+              >
+                <Text style={styles.modalCancelText}>Annuler</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalConfirmBtn}
+                onPress={handleConfirmDraw}
+              >
+                <Text style={styles.modalConfirmText}>Confirmer le tirage</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  centered: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  header: {
-    backgroundColor: colors.green,
-    paddingTop: Constants.statusBarHeight,
-    paddingBottom: 15,
-    paddingHorizontal: 15,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  headerTitle: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
-    textTransform: "uppercase",
-    textAlign: "center",
-    flex: 1,
-  },
-  content: {
-    padding: 15,
-    gap: 15,
-    paddingBottom: 30,
-  },
-  topSection: {
-    gap: 15,
-  },
-  participantsSection: {
-    marginTop: 10,
-    gap: 5,
-  },
-  dateBar: {
-    backgroundColor: colors.green,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 10,
-    padding: 12,
-    borderRadius: 8,
-  },
-  dateText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  budgetBar: {
-    borderWidth: 2,
-    borderColor: "#f0c040",
-    borderRadius: 8,
-    padding: 12,
-    alignItems: "center",
-  },
-  budgetAmount: {
-    color: "#f0a020",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  budgetSub: {
-    color: "#f0a020",
-    fontSize: 12,
-    marginTop: 4,
-  },
-  participantRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-  participantName: {
-    fontSize: 16,
-  },
-  youLabel: {
-    color: colors.gray,
-    fontStyle: "italic",
-    fontSize: 14,
-  },
-  contributionBadge: {
-    color: colors.green,
-    fontSize: 16,
-    fontWeight: "bold",
-    borderWidth: 1,
-    borderColor: colors.green,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-  },
-  participateBtn: {
-    backgroundColor: colors.green,
-    borderRadius: 5,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-  },
-  participateBtnText: {
-    color: "white",
-    fontWeight: "bold",
-  },
-  addLabel: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginTop: 10,
-  },
-  addRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-  addInput: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    padding: 10,
-  },
-  addBtn: {
-    backgroundColor: colors.green,
-    borderRadius: 8,
-    padding: 10,
-  },
-});
