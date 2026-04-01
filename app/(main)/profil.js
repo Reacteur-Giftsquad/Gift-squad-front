@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Alert } from "react-native";
+import { ActivityIndicator, Alert, View } from "react-native";
 import api from "../../utils/api";
 import Octicons from "@expo/vector-icons/Octicons";
 import colors from "../../assets/colors/colors.json";

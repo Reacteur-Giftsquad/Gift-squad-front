@@ -11,10 +11,10 @@ import colors from "../../assets/colors/colors.json";
 import ScreenWithMenu from "../../components/ScreenWithMenu";
 
 export default function Events() {
+  const router = useRouter();
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
-  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
