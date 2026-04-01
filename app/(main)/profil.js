@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { ActivityIndicator, View, Alert } from "react-native";
+import { useState } from "react";
+import { View } from "react-native";
 import api from "../../utils/api";
 import Octicons from "@expo/vector-icons/Octicons";
 import colors from "../../assets/colors/colors.json";
@@ -59,7 +59,10 @@ export default function Profil() {
           <>
             <View style={styles.center}>
               <Octicons name="feed-person" size={100} color={colors.green} />
-              <Title text={(user?.firstname || "") + " " + (user?.lastname || "")} heading="h1" />
+              <Title
+                text={(user?.firstname || "") + " " + (user?.lastname || "")}
+                heading="h1"
+              />
               <LightText text={`@${user?.pseudo || ""}`} />
             </View>
             <View style={styles.gap}>
