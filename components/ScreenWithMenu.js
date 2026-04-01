@@ -1,11 +1,19 @@
 import { useState, useRef, useEffect } from "react";
-import { View, Text, TouchableOpacity, Pressable, Animated } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Pressable,
+  Animated,
+} from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "expo-router";
 import colors from "../assets/colors/colors.json";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import styles from "../styles/dashboardStyles";
+import Feather from "@expo/vector-icons/Feather";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function ScreenWithMenu({ title, children }) {
   const { logout } = useAuth();
@@ -17,13 +25,29 @@ export default function ScreenWithMenu({ title, children }) {
   useEffect(() => {
     if (menuOpen) {
       Animated.parallel([
-        Animated.timing(slideAnim, { toValue: 0, duration: 250, useNativeDriver: true }),
-        Animated.timing(fadeAnim, { toValue: 1, duration: 250, useNativeDriver: true }),
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: 250,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 250,
+          useNativeDriver: true,
+        }),
       ]).start();
     } else {
       Animated.parallel([
-        Animated.timing(slideAnim, { toValue: -300, duration: 200, useNativeDriver: true }),
-        Animated.timing(fadeAnim, { toValue: 0, duration: 200, useNativeDriver: true }),
+        Animated.timing(slideAnim, {
+          toValue: -300,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }),
       ]).start();
     }
   }, [menuOpen]);
@@ -44,8 +68,7 @@ export default function ScreenWithMenu({ title, children }) {
         <Animated.View style={[styles.overlay, { opacity: fadeAnim }]}>
           <Pressable style={{ flex: 1 }} onPress={() => setMenuOpen(false)}>
             <Animated.View
-              style={[styles.menu, { transform: [{ translateX: slideAnim }] }]}
-            >
+              style={[styles.menu, { transform: [{ translateX: slideAnim }] }]}>
               <Pressable onPress={(e) => e.stopPropagation()}>
                 <Text style={styles.menuTitle}>Menu</Text>
                 <TouchableOpacity
@@ -53,29 +76,61 @@ export default function ScreenWithMenu({ title, children }) {
                   onPress={() => {
                     setMenuOpen(false);
                     router.push("/(main)/dashboard");
-                  }}
-                >
-                  <MaterialIcons name="home" size={22} color={colors.green} />
-                  <Text style={styles.menuItemText}>Accueil</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.menuItem}
-                  onPress={() => {
-                    setMenuOpen(false);
-                    router.push("/(main)/profil");
-                  }}
-                >
-                  <MaterialIcons name="person" size={22} color={colors.green} />
-                  <Text style={styles.menuItemText}>Profil</Text>
-                </TouchableOpacity>
+                  }}></TouchableOpacity>
+
                 <TouchableOpacity
                   style={styles.menuItem}
                   onPress={async () => {
                     await logout();
                     router.replace("/");
-                  }}
-                >
-                  <MaterialIcons name="logout" size={22} color={colors.green} />
+                  }}>
+                  <MaterialIcons name="home" size={22} color={colors.gray} />
+                  <Text style={styles.menuItemText}>Accueil</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.menuItem}
+                  onPress={async () => {
+                    router.navigate("/index");
+                  }}>
+                  <MaterialIcons
+                    name="calendar-month"
+                    size={22}
+                    color={colors.gray}
+                  />
+                  <Text style={styles.menuItemText}>Mes événements</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.menuItem}
+                  onPress={async () => {
+                    router.navigate("/createEvent");
+                  }}>
+                  <Feather name="plus" size={22} color={colors.gray} />
+                  <Text style={styles.menuItemText}>Créer un événement</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.menuItem}
+                  onPress={async () => {
+                    router.navigate("/invitations");
+                  }}>
+                  <FontAwesome name="envelope" size={22} color={colors.gray} />
+                  <Text style={styles.menuItemText}>Invitations</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.menuItem}
+                  onPress={async () => {
+                    router.navigate("/profil");
+                  }}>
+                  <MaterialIcons name="person" size={22} color={colors.gray} />
+                  <Text style={styles.menuItemText}>Mon profil</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.menuItem}
+                  onPress={async () => {
+                    await logout();
+                    router.replace("/");
+                  }}>
+                  <MaterialIcons name="logout" size={22} color={colors.red} />
                   <Text style={styles.menuItemText}>Se deconnecter</Text>
                 </TouchableOpacity>
               </Pressable>
