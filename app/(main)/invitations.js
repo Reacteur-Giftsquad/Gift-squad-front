@@ -1,11 +1,14 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import ScreenWithMenu from "../../components/ScreenWithMenu";
 
 export default function Invitations() {
   return (
-    <View style={styles.container}>
-      <Text>This is the Invitations component</Text>
-    </View>
+    <ScreenWithMenu title="Invitations">
+      <View style={styles.content}>
+        <Text>Invitation</Text>
+      </View>
+    </ScreenWithMenu>
   );
 }
 

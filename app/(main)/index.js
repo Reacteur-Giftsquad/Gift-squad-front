@@ -39,17 +39,19 @@ export default function Events() {
   return isLoading ? (
     <ActivityIndicator color={colors.green} />
   ) : (
-    <View style={styles.container}>
-      <FlatList
-        data={data}
-        keyExtractor={(event) => String(event._id)}
-        renderItem={({ event }) => <EventCard event={event} />}
-      />
-      <SubmitButton
-        text="Ajouter un évenement"
-        icon={<MaterialIcons name="add" size={24} color="white" />}
-        onPress={() => router.navigate("/createEvent")}
-      />
-    </View>
+    <ScreenWithMenu title="Invitations">
+      <View style={styles.content}>
+        <FlatList
+          data={data}
+          keyExtractor={(event) => String(event._id)}
+          renderItem={({ event }) => <EventCard event={event} />}
+        />
+        <SubmitButton
+          text="Ajouter un évenement"
+          icon={<MaterialIcons name="add" size={24} color="white" />}
+          onPress={() => router.navigate("/createEvent")}
+        />
+      </View>
+    </ScreenWithMenu>
   );
 }

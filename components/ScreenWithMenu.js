@@ -83,7 +83,7 @@ export default function ScreenWithMenu({ title, children }) {
                 <TouchableOpacity
                   style={styles.menuItem}
                   onPress={async () => {
-                    router.navigate("/index");
+                    router.replace("/(newEvent)/");
                   }}>
                   <MaterialIcons
                     name="calendar-month"
@@ -95,7 +95,7 @@ export default function ScreenWithMenu({ title, children }) {
                 <TouchableOpacity
                   style={styles.menuItem}
                   onPress={async () => {
-                    router.navigate("/createEvent");
+                    router.replace("/(newEvent)/createEvent");
                   }}>
                   <Feather name="plus" size={22} color={colors.gray} />
                   <Text style={styles.menuItemText}>Créer un événement</Text>
@@ -103,7 +103,7 @@ export default function ScreenWithMenu({ title, children }) {
                 <TouchableOpacity
                   style={styles.menuItem}
                   onPress={async () => {
-                    router.navigate("/invitations");
+                    router.replace("/invitations");
                   }}>
                   <FontAwesome name="envelope" size={22} color={colors.gray} />
                   <Text style={styles.menuItemText}>Invitations</Text>
@@ -111,7 +111,7 @@ export default function ScreenWithMenu({ title, children }) {
                 <TouchableOpacity
                   style={styles.menuItem}
                   onPress={async () => {
-                    router.navigate("/profil");
+                    router.replace("/profil");
                   }}>
                   <MaterialIcons name="person" size={22} color={colors.gray} />
                   <Text style={styles.menuItemText}>Mon profil</Text>
