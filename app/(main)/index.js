@@ -7,6 +7,7 @@ import EventCard from "../../components/EventCard";
 import SubmitButton from "../../components/SubmitButton";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import colors from "../../assets/colors/colors.json";
+import ScreenWithMenu from "../../components/ScreenWithMenu";
 
 export default function Events() {
   const [data, setData] = useState(null);

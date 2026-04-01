@@ -83,7 +83,7 @@ export default function ScreenWithMenu({ title, children }) {
                 <TouchableOpacity
                   style={styles.menuItem}
                   onPress={async () => {
-                    router.replace("/(newEvent)/");
+                    router.replace("/");
                   }}>
                   <MaterialIcons
                     name="calendar-month"
