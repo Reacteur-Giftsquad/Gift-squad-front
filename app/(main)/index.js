@@ -3,6 +3,7 @@ import styles from "../../styles/globals";
 import { useEffect, useState } from "react";
 import api from "../../utils/api";
 import { useAuth } from "../../context/AuthContext";
+import { useRouter } from "expo-router";
 import EventCard from "../../components/EventCard";
 import SubmitButton from "../../components/SubmitButton";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -13,6 +14,7 @@ export default function Events() {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,7 +23,6 @@ export default function Events() {
           params: { userId: user._id },
         });
         setData(response.data);
-        setIsLoading(false);
       } catch (error) {
         if (error.response) {
           Alert.alert(
@@ -32,25 +33,28 @@ export default function Events() {
           Alert.alert("Erreur", "Impossible de se connecter au serveur");
         }
       }
+      setIsLoading(false);
     };
 
     fetchData();
   }, []);
 
-  return isLoading ? (
-    <ActivityIndicator color={colors.green} />
-  ) : (
-    <ScreenWithMenu title="Invitations">
+  return (
+    <ScreenWithMenu title="Mes événements">
       <View style={styles.content}>
-        <FlatList
-          data={data}
-          keyExtractor={(event) => String(event._id)}
-          renderItem={({ event }) => <EventCard event={event} />}
-        />
+        {isLoading ? (
+          <ActivityIndicator size="large" color={colors.green} />
+        ) : (
+          <FlatList
+            data={data}
+            keyExtractor={(item) => String(item._id)}
+            renderItem={({ item }) => <EventCard event={item} />}
+          />
+        )}
         <SubmitButton
-          text="Ajouter un évenement"
+          text="Ajouter un événement"
           icon={<MaterialIcons name="add" size={24} color="white" />}
-          onPress={() => router.navigate("/createEvent")}
+          onPress={() => router.push("/(main)/(newEvent)/")}
         />
       </View>
     </ScreenWithMenu>
