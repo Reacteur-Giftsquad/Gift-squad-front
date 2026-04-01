@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, View, Alert } from "react-native";
 import api from "../../utils/api";
 import Octicons from "@expo/vector-icons/Octicons";
 import colors from "../../assets/colors/colors.json";
@@ -15,7 +15,7 @@ import ScreenWithMenu from "../../components/ScreenWithMenu";
 
 export default function Profil() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, login, logout } = useAuth();
 
   const [form, setForm] = useState({
     firstname: user.firstname,
@@ -27,14 +27,14 @@ export default function Profil() {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      const { data } = await api.post(`/user/modify/${user._id}`, {
+      const { data } = await api.put(`/user/modify/${user._id}`, {
         firstname: form.firstname,
         lastname: form.lastname,
         pseudo: form.pseudo,
         email: form.email,
       });
 
-      setUser(data);
+      await login(user.token || "", data);
     } catch (error) {
       if (error.response) {
         Alert.alert(
@@ -52,7 +52,7 @@ export default function Profil() {
   return (
     <ScreenWithMenu title="Mon profil">
       <View style={styles.content}>
-        {isLoading ? (
+        {isSubmitting ? (
           <ActivityIndicator />
         ) : (
           <>
@@ -79,7 +79,7 @@ export default function Profil() {
                 title="Pseudo"
                 placeholder="Choisissez un pseudo unique"
                 value={form.pseudo}
-                onChangeText={(v) => setForm({ ...form, pseudo: v })}
+                setState={(v) => setForm({ ...form, pseudo: v })}
               />
               <Input
                 title="Email"
@@ -96,7 +96,7 @@ export default function Profil() {
                 icon={<Ionicons name="save" size={24} color="white" />}
               />
               <SubmitButton
-                text="Se déconnecterr"
+                text="Se déconnecter"
                 onPress={logout}
                 bgColor={colors.red}
                 icon={<MaterialIcons name="logout" size={24} color="white" />}
