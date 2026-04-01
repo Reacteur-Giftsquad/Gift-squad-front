@@ -29,6 +29,11 @@ export function AuthProvider({ children }) {
     await AsyncStorage.setItem("user", JSON.stringify(userData));
   };
 
+  const updateUser = async (userData) => {
+    setUser(userData);
+    await AsyncStorage.setItem("user", JSON.stringify(userData));
+  };
+
   const logout = async () => {
     setUser(null);
     setToken(null);
@@ -37,7 +42,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ user, token, isLoading, login, updateUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

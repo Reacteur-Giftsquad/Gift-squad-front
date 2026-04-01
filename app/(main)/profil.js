@@ -15,7 +15,7 @@ import ScreenWithMenu from "../../components/ScreenWithMenu";
 
 export default function Profil() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { user, login, logout } = useAuth();
+  const { user, updateUser, logout } = useAuth();
 
   const [form, setForm] = useState({
     firstname: user?.firstname || "",
@@ -34,7 +34,8 @@ export default function Profil() {
         email: form.email,
       });
 
-      await login(user.token || "", data);
+      await updateUser({ ...user, ...data });
+      Alert.alert("Succes", "Profil mis a jour");
     } catch (error) {
       if (error.response) {
         Alert.alert(
