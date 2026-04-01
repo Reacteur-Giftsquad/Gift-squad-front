@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View } from "react-native";
+import { View, Alert } from "react-native";
 import api from "../../utils/api";
 import Octicons from "@expo/vector-icons/Octicons";
 import colors from "../../assets/colors/colors.json";
@@ -53,9 +53,6 @@ export default function Profil() {
   return (
     <ScreenWithMenu title="Mon profil">
       <View style={styles.content}>
-        {isSubmitting ? (
-          <ActivityIndicator />
-        ) : (
           <>
             <View style={styles.center}>
               <Octicons name="feed-person" size={100} color={colors.green} />
@@ -107,7 +104,6 @@ export default function Profil() {
               />
             </View>
           </>
-        )}
       </View>
     </ScreenWithMenu>
   );

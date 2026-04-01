@@ -24,7 +24,7 @@ export default function CreateEvent() {
   const [form, setForm] = useState({
     title: "",
     date: "",
-    description: "",
+    budget: "",
   });
 
   const handleCreate = async () => {
@@ -38,7 +38,7 @@ export default function CreateEvent() {
         title: form.title,
         type: TYPE_LABELS[type] || type,
         date: form.date,
-        description: form.description,
+        budget: form.budget,
         creator: user._id,
       });
       Alert.alert("Succes", "Événement créé !", [
@@ -74,10 +74,10 @@ export default function CreateEvent() {
           value={form.date}
         />
         <Input
-          title="Description"
-          placeholder="Description (optionnel)"
-          setState={(v) => setForm({ ...form, description: v })}
-          value={form.description}
+          title="Budget"
+          placeholder="Budget (optionnel)"
+          setState={(v) => setForm({ ...form, budget: v })}
+          value={form.budget}
         />
         <SubmitButton
           text="Créer l'événement"
