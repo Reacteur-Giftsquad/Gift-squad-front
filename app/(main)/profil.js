@@ -53,9 +53,6 @@ export default function Profil() {
   return (
     <ScreenWithMenu title="Mon profil">
       <View style={styles.content}>
-        {isSubmitting ? (
-          <ActivityIndicator />
-        ) : (
           <>
             <View style={styles.center}>
               <Octicons name="feed-person" size={100} color={colors.green} />
@@ -107,7 +104,6 @@ export default function Profil() {
               />
             </View>
           </>
-        )}
       </View>
     </ScreenWithMenu>
   );
