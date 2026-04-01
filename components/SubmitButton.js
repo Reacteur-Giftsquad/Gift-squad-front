@@ -7,21 +7,25 @@ import {
 } from "react-native";
 import colors from "../assets/colors/colors.json";
 
-const SubmitButton = ({ icon, text, onPress, red, isSubmitting }) => {
+const SubmitButton = ({
+  icon,
+  text,
+  onPress,
+  bgColor,
+  color,
+  isSubmitting,
+}) => {
   return (
     <Pressable
-      style={[
-        styles.button,
-        { backgroundColor: red ? colors.red : colors.green },
-      ]}
+      style={[styles.button, { backgroundColor: bgColor || colors.green }]}
       onPress={onPress}
       disabled={isSubmitting}>
       {isSubmitting ? (
-        <ActivityIndicator color="white" />
+        <ActivityIndicator color={color || "white"} />
       ) : (
         <View style={styles.buttonContent}>
           <Text>{icon}</Text>
-          <Text style={styles.text}>{text}</Text>
+          <Text style={[styles.text, { color: color || "white" }]}>{text}</Text>
         </View>
       )}
     </Pressable>
@@ -42,7 +46,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
-    color: "white",
   },
 });
 export default SubmitButton;

@@ -112,7 +112,7 @@ export default function Profil() {
             <SubmitButton
               text="Se déconnecterr"
               onPress={logout}
-              red
+              bgColor={colors.red}
               icon={<MaterialIcons name="logout" size={24} color="white" />}
             />
           </View>

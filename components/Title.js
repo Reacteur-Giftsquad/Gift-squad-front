@@ -12,5 +12,6 @@ export default function Title({ text, heading }) {
 const styles = StyleSheet.create({
   title: {
     textTransform: "uppercase",
+    lineHeight: 30,
   },
 });

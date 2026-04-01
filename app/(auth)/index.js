@@ -60,6 +60,7 @@ export default function LoginScreen() {
           icon={<MaterialIcons name="login" size={24} color="white" />}
           text="Se connecter"
           onPress={handleLogin}
+          bgColor={colors.green}
         />
         <LinkButton
           text={"Pas encore de compte ? Créez-en un !"}

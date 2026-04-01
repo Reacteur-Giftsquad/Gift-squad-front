@@ -2,5 +2,7 @@
   "green": "#4ead51",
   "gray": "#363636",
   "lightgray": "#666666",
-  "red": "#f44336"
+  "red": "#f44336",
+  "lightorange": "#ffcc80",
+  "orange": "#e65100"
 }
