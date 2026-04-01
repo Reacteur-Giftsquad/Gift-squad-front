@@ -1,6 +1,13 @@
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import colors from "../assets/colors/colors.json";
 
 const Input = ({ title, type, placeholder, setState, value }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,8 +31,7 @@ const Input = ({ title, type, placeholder, setState, value }) => {
         {isPassword && (
           <TouchableOpacity
             onPress={() => setShowPassword(!showPassword)}
-            style={styles.eyeIcon}
-          >
+            style={styles.eyeIcon}>
             <MaterialIcons
               name={showPassword ? "visibility-off" : "visibility"}
               size={22}
@@ -44,10 +50,13 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: "100%",
+    gap: 8,
   },
   inputRow: {
     flexDirection: "row",
     alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#d1d1d1",
   },
   input: {
     flex: 1,

@@ -102,9 +102,7 @@ export default function SignupScreen() {
         <LinkButton
           text={"Deja un compte ? Se connecter"}
           onPress={() => router.push("/")}
-          icon={
-            <MaterialIcons name="login" size={24} color={colors.green} />
-          }
+          icon={<MaterialIcons name="login" size={24} color={colors.green} />}
         />
       </View>
       <StatusBar style="light" />
