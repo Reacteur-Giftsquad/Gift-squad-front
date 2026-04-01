@@ -6,10 +6,12 @@ import styles from "../../styles/globals";
 import api from "../../utils/api";
 import Header from "../../components/Header";
 import Input from "../../components/Input";
+import Header from "../../components/Header";
+import { StatusBar } from "expo-status-bar";
 import SubmitButton from "../../components/SubmitButton";
+import LinkButton from "../../components/LinkButton";
 import colors from "../../assets/colors/colors.json";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import LinkButton from "../../components/LinkButton";
 
 export default function SignupScreen() {
   const [form, setForm] = useState({
@@ -37,7 +39,7 @@ export default function SignupScreen() {
         password: form.password,
       });
       await login(data.token, data.user);
-      router.push("/home");
+      router.replace("/(main)/dashboard");
     } catch (error) {
       if (error.response) {
         Alert.alert(
@@ -52,25 +54,25 @@ export default function SignupScreen() {
 
   return (
     <View style={styles.container}>
-      <Header title="Créer un compte" />
+      <Header title="Signup" />
       <View style={styles.content}>
         <Input
-          title="Prénom"
-          placeholder={"Votre prénom"}
-          value={form.firstname}
+          title="Prenom"
+          placeholder="Votre prenom"
           setState={(v) => setForm({ ...form, firstname: v })}
+          value={form.firstname}
         />
         <Input
           title="Nom"
-          placeholder={"Votre nom"}
-          value={form.lastname}
+          placeholder="Votre nom"
           setState={(v) => setForm({ ...form, lastname: v })}
+          value={form.lastname}
         />
         <Input
           title="Pseudo"
-          placeholder="Choisissez un pseudo unique"
+          placeholder="Votre pseudo"
+          setState={(v) => setForm({ ...form, pseudo: v })}
           value={form.pseudo}
-          onChangeText={(v) => setForm({ ...form, pseudo: v })}
         />
         <Input
           title="Email"
@@ -92,20 +94,18 @@ export default function SignupScreen() {
           value={form.confirmPassword}
           type="password"
         />
-
         <SubmitButton
-          text="Créer mon compte"
+          icon={<MaterialIcons name="person-add" size={24} color="white" />}
+          text="Creer mon compte"
           onPress={handleSignup}
-          icon={
-            <MaterialIcons name="person-add-alt-1" size={24} color="white" />
-          }
         />
         <LinkButton
-          text={"Déjà un compte ? Se connecter"}
+          text={"Deja un compte ? Se connecter"}
           onPress={() => router.push("/")}
           icon={<MaterialIcons name="login" size={24} color={colors.green} />}
         />
       </View>
+      <StatusBar style="light" />
     </View>
   );
 }

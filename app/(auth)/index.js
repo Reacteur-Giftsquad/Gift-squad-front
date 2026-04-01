@@ -25,7 +25,7 @@ export default function LoginScreen() {
         password,
       });
       await login(data.token, data.user);
-      router.push("/home");
+      router.replace("/(main)/dashboard");
     } catch (error) {
       if (error.response) {
         Alert.alert(
