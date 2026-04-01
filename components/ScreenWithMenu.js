@@ -75,14 +75,7 @@ export default function ScreenWithMenu({ title, children }) {
                   style={styles.menuItem}
                   onPress={() => {
                     setMenuOpen(false);
-                    router.push("/(main)/dashboard");
-                  }}></TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.menuItem}
-                  onPress={async () => {
-                    await logout();
-                    router.replace("/");
+                    router.replace("/(main)/dashboard");
                   }}>
                   <MaterialIcons name="home" size={22} color={colors.gray} />
                   <Text style={styles.menuItemText}>Accueil</Text>

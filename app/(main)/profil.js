@@ -18,10 +18,10 @@ export default function Profil() {
   const { user, login, logout } = useAuth();
 
   const [form, setForm] = useState({
-    firstname: user.firstname,
-    lastname: user.lastname,
-    pseudo: user.pseudo,
-    email: user.email,
+    firstname: user?.firstname || "",
+    lastname: user?.lastname || "",
+    pseudo: user?.pseudo || "",
+    email: user?.email || "",
   });
 
   const handleSubmit = async () => {
@@ -58,8 +58,8 @@ export default function Profil() {
           <>
             <View style={styles.center}>
               <Octicons name="feed-person" size={100} color={colors.green} />
-              <Title text={user.firstname + " " + user.lastname} heading="h1" />
-              <LightText text={`@${user.pseudo}`} />
+              <Title text={(user?.firstname || "") + " " + (user?.lastname || "")} heading="h1" />
+              <LightText text={`@${user?.pseudo || ""}`} />
             </View>
             <View style={styles.gap}>
               <Title text="INFORMATION PERSONNELLES" heading="h2" />
