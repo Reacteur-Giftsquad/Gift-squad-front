@@ -64,7 +64,7 @@ export default function SignupScreen() {
           title="Nom"
           placeholder={"Votre nom"}
           value={form.lastname}
-          setState={(v) => setForm({ ...form, firstname: v })}
+          setState={(v) => setForm({ ...form, lastname: v })}
         />
         <Input
           title="Pseudo"
