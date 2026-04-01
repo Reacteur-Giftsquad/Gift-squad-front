@@ -6,6 +6,7 @@ export default StyleSheet.create({
     backgroundColor: "#fff",
   },
   content: {
+    gap: 25,
     padding: 20,
   },
 });

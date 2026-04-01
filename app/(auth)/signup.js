@@ -4,6 +4,7 @@ import { View, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import styles from "../../styles/loginStyles";
 import api from "../../utils/api";
+import Header from "../../components/Header";
 import Input from "../../components/Input";
 import Header from "../../components/Header";
 import { StatusBar } from "expo-status-bar";

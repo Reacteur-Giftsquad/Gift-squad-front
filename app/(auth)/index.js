@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { View, Alert } from "react-native";
 import { useRouter } from "expo-router";
-import styles from "../../styles/loginStyles";
+import styles from "../../styles/globals";
 import Header from "../../components/Header";
 import { StatusBar } from "expo-status-bar";
 import Input from "../../components/Input";
@@ -15,7 +15,6 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
   const router = useRouter();
 
