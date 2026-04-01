@@ -9,7 +9,6 @@ import SubmitButton from "../../components/SubmitButton";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import colors from "../../assets/colors/colors.json";
 import ScreenWithMenu from "../../components/ScreenWithMenu";
-import { useRouter } from "expo-router";
 
 export default function Events() {
   const router = useRouter();
