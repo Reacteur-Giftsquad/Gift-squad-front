@@ -6,7 +6,6 @@ import styles from "../../styles/globals";
 import api from "../../utils/api";
 import Header from "../../components/Header";
 import Input from "../../components/Input";
-import Header from "../../components/Header";
 import { StatusBar } from "expo-status-bar";
 import SubmitButton from "../../components/SubmitButton";
 import LinkButton from "../../components/LinkButton";
