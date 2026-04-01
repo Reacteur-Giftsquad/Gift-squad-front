@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, FlatList, Text, View } from "react-native";
+import { ActivityIndicator, Alert, FlatList, View } from "react-native";
 import styles from "../../styles/globals";
 import { useEffect, useState } from "react";
 import api from "../../utils/api";
@@ -6,6 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 import EventCard from "../../components/EventCard";
 import SubmitButton from "../../components/SubmitButton";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import colors from "../../assets/colors/colors.json";
 
 export default function Events() {
   const [data, setData] = useState(null);
@@ -36,7 +37,7 @@ export default function Events() {
   }, []);
 
   return isLoading ? (
-    <ActivityIndicator />
+    <ActivityIndicator color={colors.green} />
   ) : (
     <View style={styles.container}>
       <FlatList
