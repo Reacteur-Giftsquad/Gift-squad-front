@@ -5,6 +5,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 const Input = ({ title, type, placeholder, setState, value }) => {
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === "password";
+  const isEmail = type === "email";
 
   return (
     <View style={styles.inputContainer}>
@@ -16,6 +17,9 @@ const Input = ({ title, type, placeholder, setState, value }) => {
           onChangeText={setState}
           value={value}
           secureTextEntry={isPassword && !showPassword}
+          keyboardType={isEmail ? "email-address" : "default"}
+          autoCapitalize={isEmail || isPassword ? "none" : "sentences"}
+          autoComplete={isEmail ? "email" : undefined}
         />
         {isPassword && (
           <TouchableOpacity

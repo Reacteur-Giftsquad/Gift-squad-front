@@ -45,6 +45,7 @@ export default function LoginScreen() {
         <Input
           title="Email"
           placeholder="Votre email"
+          type="email"
           setState={setEmail}
           value={email}
         />
