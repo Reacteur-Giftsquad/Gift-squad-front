@@ -52,58 +52,52 @@ export default function Profil() {
   return (
     <ScreenWithMenu title="Mon profil">
       <View style={styles.content}>
-        {isLoading ? (
-          <ActivityIndicator />
-        ) : (
-          <>
-            <View style={styles.center}>
-              <Octicons name="feed-person" size={100} color={colors.green} />
-              <Title text={user.firstname + " " + user.lastname} heading="h1" />
-              <LightText text={`@${user.pseudo}`} />
-            </View>
-            <View style={styles.gap}>
-              <Title text="INFORMATION PERSONNELLES" heading="h2" />
-              <Input
-                title="Prénom"
-                placeholder={"Votre prénom"}
-                value={form.firstname}
-                setState={(v) => setForm({ ...form, firstname: v })}
-              />
-              <Input
-                title="Nom"
-                placeholder={"Votre nom"}
-                value={form.lastname}
-                setState={(v) => setForm({ ...form, lastname: v })}
-              />
-              <Input
-                title="Pseudo"
-                placeholder="Choisissez un pseudo unique"
-                value={form.pseudo}
-                onChangeText={(v) => setForm({ ...form, pseudo: v })}
-              />
-              <Input
-                title="Email"
-                placeholder="Votre email"
-                setState={(v) => setForm({ ...form, email: v })}
-                value={form.email}
-              />
-            </View>
-            <View style={styles.gap}>
-              <SubmitButton
-                text="Enregistrer les modifications"
-                onPress={handleSubmit}
-                isSubmitting={isSubmitting}
-                icon={<Ionicons name="save" size={24} color="white" />}
-              />
-              <SubmitButton
-                text="Se déconnecterr"
-                onPress={logout}
-                bgColor={colors.red}
-                icon={<MaterialIcons name="logout" size={24} color="white" />}
-              />
-            </View>
-          </>
-        )}
+        <View style={styles.center}>
+          <Octicons name="feed-person" size={100} color={colors.green} />
+          <Title text={user.firstname + " " + user.lastname} heading="h1" />
+          <LightText text={`@${user.pseudo}`} />
+        </View>
+        <View style={styles.gap}>
+          <Title text="INFORMATION PERSONNELLES" heading="h2" />
+          <Input
+            title="Prénom"
+            placeholder={"Votre prénom"}
+            value={form.firstname}
+            setState={(v) => setForm({ ...form, firstname: v })}
+          />
+          <Input
+            title="Nom"
+            placeholder={"Votre nom"}
+            value={form.lastname}
+            setState={(v) => setForm({ ...form, lastname: v })}
+          />
+          <Input
+            title="Pseudo"
+            placeholder="Choisissez un pseudo unique"
+            value={form.pseudo}
+            onChangeText={(v) => setForm({ ...form, pseudo: v })}
+          />
+          <Input
+            title="Email"
+            placeholder="Votre email"
+            setState={(v) => setForm({ ...form, email: v })}
+            value={form.email}
+          />
+        </View>
+        <View style={styles.gap}>
+          <SubmitButton
+            text="Enregistrer les modifications"
+            onPress={handleSubmit}
+            isSubmitting={isSubmitting}
+            icon={<Ionicons name="save" size={24} color="white" />}
+          />
+          <SubmitButton
+            text="Se déconnecterr"
+            onPress={logout}
+            bgColor={colors.red}
+            icon={<MaterialIcons name="logout" size={24} color="white" />}
+          />
+        </View>
       </View>
     </ScreenWithMenu>
   );
