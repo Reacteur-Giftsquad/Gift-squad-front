@@ -9,12 +9,13 @@ import SubmitButton from "../../components/SubmitButton";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import colors from "../../assets/colors/colors.json";
 import ScreenWithMenu from "../../components/ScreenWithMenu";
+import { useRouter } from "expo-router";
 
 export default function Events() {
+  const router = useRouter();
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
-  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
