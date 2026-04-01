@@ -76,6 +76,7 @@ export default function SignupScreen() {
         <Input
           title="Email"
           placeholder="Votre email"
+          type="email"
           setState={(v) => setForm({ ...form, email: v })}
           value={form.email}
         />
