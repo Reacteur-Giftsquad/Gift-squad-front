@@ -9,4 +9,11 @@ export default StyleSheet.create({
     gap: 25,
     padding: 20,
   },
+  center: {
+    alignItems: "center",
+    gap: 10,
+  },
+  gap: {
+    gap: 15,
+  },
 });
