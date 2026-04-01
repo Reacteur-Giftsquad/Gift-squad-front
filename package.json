@@ -21,7 +21,11 @@
     "react-native": "0.81.5",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
+<<<<<<< HEAD
     "react-native-worklets": "0.5.1"
+=======
+    "react-native-web": "^0.21.2"
+>>>>>>> 7ba2d90 (save before pull)
   },
   "private": true,
   "devDependencies": {

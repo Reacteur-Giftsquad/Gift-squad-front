@@ -26,12 +26,16 @@ export function AuthProvider({ children }) {
     setToken(newToken);
     setUser(userData);
     await AsyncStorage.setItem("token", newToken);
+<<<<<<< HEAD
     await AsyncStorage.setItem("user", JSON.stringify(userData));
   };
 
   const updateUser = async (userData) => {
     setUser(userData);
     await AsyncStorage.setItem("user", JSON.stringify(userData));
+=======
+    await AsyncStorage.setItem("user", JSON.stringify(userData)); // il manque la valeur ! je l'ajoute
+>>>>>>> 7ba2d90 (save before pull)
   };
 
   const logout = async () => {

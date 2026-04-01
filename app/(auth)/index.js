@@ -4,7 +4,6 @@ import { View, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import styles from "../../styles/globals";
 import Header from "../../components/Header";
-import { StatusBar } from "expo-status-bar";
 import Input from "../../components/Input";
 import api from "../../utils/api";
 import SubmitButton from "../../components/SubmitButton";
