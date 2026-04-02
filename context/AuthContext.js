@@ -12,7 +12,12 @@ export function AuthProvider({ children }) {
     const restoreSession = async () => {
       const savedToken = await AsyncStorage.getItem("token");
       const savedUser = await AsyncStorage.getItem("user");
-      console.log("Restore session - token:", savedToken ? "found" : "none", "user:", savedUser);
+      console.log(
+        "Restore session - token:",
+        savedToken ? "found" : "none",
+        "user:",
+        savedUser,
+      );
       if (savedToken && savedUser) {
         setToken(savedToken);
         setUser(JSON.parse(savedUser));
@@ -26,16 +31,12 @@ export function AuthProvider({ children }) {
     setToken(newToken);
     setUser(userData);
     await AsyncStorage.setItem("token", newToken);
-<<<<<<< HEAD
     await AsyncStorage.setItem("user", JSON.stringify(userData));
   };
 
   const updateUser = async (userData) => {
     setUser(userData);
     await AsyncStorage.setItem("user", JSON.stringify(userData));
-=======
-    await AsyncStorage.setItem("user", JSON.stringify(userData)); // il manque la valeur ! je l'ajoute
->>>>>>> 7ba2d90 (save before pull)
   };
 
   const logout = async () => {
@@ -46,7 +47,9 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, isLoading, login, updateUser, logout }}>
+    <AuthContext.Provider
+      value={{ user, token, isLoading, login, updateUser, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
