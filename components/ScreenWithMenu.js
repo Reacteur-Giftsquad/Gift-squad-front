@@ -123,7 +123,7 @@ export default function ScreenWithMenu({ title, children }) {
                   style={styles.menuItem}
                   onPress={async () => {
                     await logout();
-                    router.replace("/");
+                    router.replace("(auth)/");
                   }}>
                   <MaterialIcons name="logout" size={22} color={colors.red} />
                   <Text style={styles.menuItemText}>Se deconnecter</Text>

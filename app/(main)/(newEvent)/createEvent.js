@@ -69,9 +69,8 @@ export default function CreateEvent() {
         />
         <Input
           title="Date"
-          placeholder="JJ/MM/AAAA"
           setState={(v) => setForm({ ...form, date: v })}
-          value={form.date}
+          type="date"
         />
         <Input
           title="Budget"
