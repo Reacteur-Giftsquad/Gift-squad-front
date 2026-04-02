@@ -39,7 +39,9 @@ export default function CreateEvent() {
         type: TYPE_LABELS[type] || type,
         date: form.date,
         budget: form.budget,
-        creator: user._id,
+        members: {
+          user: user._id,
+        },
       });
       Alert.alert("Succes", "Événement créé !", [
         { text: "OK", onPress: () => router.replace("/(main)/events") },
