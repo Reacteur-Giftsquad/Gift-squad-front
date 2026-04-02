@@ -19,8 +19,9 @@ export default function Events() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get(`/events/${user._id}`);
-
+        const response = await api.get("/events", {
+          params: { userId: user._id },
+        });
         setData(response.data);
       } catch (error) {
         if (error.response) {
