@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { ActivityIndicator, Alert, View } from "react-native";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  View,
+} from "react-native";
 import api from "../../utils/api";
 import Octicons from "@expo/vector-icons/Octicons";
 import colors from "../../assets/colors/colors.json";
@@ -13,11 +19,13 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import ScreenWithMenu from "../../components/ScreenWithMenu";
 import { useRouter } from "expo-router";
+import { useBehavior } from "../../utils/useBehavior";
 
 export default function Profil() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user, updateUser, logout } = useAuth();
+  const behaviour = useBehavior();
 
   const [form, setForm] = useState({
     firstname: user?.firstname || "",
@@ -54,8 +62,11 @@ export default function Profil() {
 
   return (
     <ScreenWithMenu title="Mon profil">
-      <View style={styles.content}>
-        <>
+      <KeyboardAvoidingView
+        behavior={behaviour}
+        enabled={Platform.OS === "android"}
+        style={styles.container}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content}>
           <View style={styles.center}>
             <Octicons name="feed-person" size={100} color={colors.green} />
             <Title
@@ -108,8 +119,8 @@ export default function Profil() {
               icon={<MaterialIcons name="logout" size={24} color="white" />}
             />
           </View>
-        </>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </ScreenWithMenu>
   );
 }
