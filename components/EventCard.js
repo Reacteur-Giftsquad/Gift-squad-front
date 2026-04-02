@@ -1,16 +1,27 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useRouter } from "expo-router";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import colors from "../assets/colors/colors.json";
 import convertDate from "../utils/convertDate";
 import Icon from "./Icon";
 
 export default function EventCard({ event }) {
+  const router = useRouter();
+
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() =>
+        router.push({
+          pathname: "/(main)/eventDetail",
+          params: { id: event._id },
+        })
+      }
+    >
       <View style={styles.giftAndData}>
-        <Icon type="gift" />
+        <Icon type={event.type} />
         <View style={styles.eventData}>
-          <Text style={styles.title}>{event.title}</Text>
+          <Text style={styles.title}>{event.name}</Text>
           <Text style={styles.type}>{event.type}</Text>
           <View style={styles.date}>
             <Text>
@@ -27,7 +38,7 @@ export default function EventCard({ event }) {
       <Text>
         <MaterialIcons name="arrow-forward-ios" size={24} color={colors.gray} />
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 }
 

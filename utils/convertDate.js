@@ -23,6 +23,7 @@ const convertDate = (date) => {
     "décembre",
   ];
 
+  date = new Date(date);
   const day = daysOfTheWeek[date.getDay()];
   const month = months[date.getMonth()];
   return `le ${day} ${date.getDate()} ${month} ${date.getFullYear()}`;
