@@ -63,17 +63,33 @@ export default function AddGift() {
 
     setIsSubmitting(true);
     try {
-      await api.post("/gift/create", {
-        name: form.name,
-        price: Number(form.price),
-        link: form.link,
-        image_url: image || "",
-        event: eventId,
+      const formData = new FormData();
+      formData.append("name", form.name);
+      formData.append("price", form.price);
+      formData.append("link", form.link);
+      formData.append("event", eventId);
+      if (image) {
+        const filename = image.split("/").pop();
+        const ext = filename.split(".").pop();
+        console.log("Image URI:", image);
+        console.log("Image file:", { uri: image, name: filename, type: `image/${ext === "jpg" ? "jpeg" : ext}` });
+        formData.append("image", {
+          uri: image,
+          name: filename,
+          type: `image/${ext === "jpg" ? "jpeg" : ext}`,
+        });
+      }
+      console.log("Sending gift create request...");
+      const response = await api.post("/gift/create", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
+      console.log("Gift created:", response.data);
       Alert.alert("Succes", "Cadeau ajouté !", [
         { text: "OK", onPress: () => router.back() },
       ]);
     } catch (error) {
+      console.log("Gift create error:", error.message);
+      console.log("Error response:", error.response?.status, error.response?.data);
       if (error.response) {
         Alert.alert("Erreur", error.response.data.message || "Erreur");
       } else {
@@ -103,9 +119,10 @@ export default function AddGift() {
           value={form.name}
         />
         <Input
-          title="Prix"
-          placeholder="Ex: 25€"
-          setState={(v) => setForm({ ...form, price: v })}
+          title="Prix (€)"
+          placeholder="Ex: 25"
+          type="price"
+          setState={(v) => setForm({ ...form, price: v.replace(/[^0-9]/g, "") })}
           value={form.price}
         />
 

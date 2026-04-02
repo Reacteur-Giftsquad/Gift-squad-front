@@ -7,7 +7,6 @@ import {
   View,
 } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import colors from "../assets/colors/colors.json";
 
 const Input = ({ title, type, placeholder, setState, value }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,7 +23,7 @@ const Input = ({ title, type, placeholder, setState, value }) => {
           onChangeText={setState}
           value={value}
           secureTextEntry={isPassword && !showPassword}
-          keyboardType={isEmail ? "email-address" : "default"}
+          keyboardType={isEmail ? "email-address" : type === "price" ? "numeric" : "default"}
           autoCapitalize={isEmail || isPassword ? "none" : "sentences"}
           autoComplete={isEmail ? "email" : undefined}
         />

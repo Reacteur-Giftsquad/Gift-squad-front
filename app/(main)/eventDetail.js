@@ -151,7 +151,7 @@ export default function EventDetail() {
         <View style={styles.participantsSection}>
           <Title text="PARTICIPANTS" heading="h2" />
 
-          {(event.members || []).map((item, index) => {
+          {[...(event.members || [])].sort((a) => a.user?._id === user._id ? -1 : 1).map((item, index) => {
             const member = item.user;
             if (!member) return null;
             const isYou = member._id === user._id;
