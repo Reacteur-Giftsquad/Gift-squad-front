@@ -200,6 +200,10 @@ export default function EventDetail() {
 
         {isSecretSanta && (
           <View style={styles.drawSection}>
+            <Text style={styles.warningText}>
+              <Text style={{ fontWeight: "bold" }}>Attention : </Text>
+              Une fois le tirage effectué, il ne sera plus possible de modifier la liste des participants.
+            </Text>
             <SubmitButton
               text="Effectuer le tirage au sort"
               onPress={() => setShowDrawModal(true)}
