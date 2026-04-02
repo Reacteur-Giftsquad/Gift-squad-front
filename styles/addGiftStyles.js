@@ -1,0 +1,65 @@
+import { StyleSheet } from "react-native";
+import Constants from "expo-constants";
+import colors from "../assets/colors/colors.json";
+
+export default StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  header: {
+    backgroundColor: colors.green,
+    paddingTop: Constants.statusBarHeight,
+    paddingBottom: 15,
+    paddingHorizontal: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  headerTitle: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    textAlign: "center",
+    flex: 1,
+  },
+  content: {
+    padding: 20,
+    gap: 15,
+    paddingBottom: 30,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginTop: 5,
+  },
+  imageButtons: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 15,
+  },
+  imageBtn: {
+    backgroundColor: colors.green,
+    borderRadius: 10,
+    padding: 15,
+  },
+  imagePreview: {
+    borderWidth: 2,
+    borderColor: "#ccc",
+    borderStyle: "dashed",
+    borderRadius: 8,
+    height: 120,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  previewImage: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 8,
+  },
+  previewText: {
+    color: colors.gray,
+    marginTop: 5,
+  },
+});

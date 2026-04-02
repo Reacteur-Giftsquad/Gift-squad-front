@@ -35,7 +35,7 @@ export default function CreateEvent() {
     setIsSubmitting(true);
     try {
       await api.post("/events/create", {
-        title: form.title,
+        name: form.title,
         type: TYPE_LABELS[type] || type,
         date: form.date,
         budget: form.budget,
@@ -75,7 +75,7 @@ export default function CreateEvent() {
         />
         <Input
           title="Budget"
-          placeholder="Budget (optionnel)"
+          placeholder="Ex: 20€"
           setState={(v) => setForm({ ...form, budget: v })}
           value={form.budget}
         />
