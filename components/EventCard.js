@@ -17,24 +17,24 @@ export default function EventCard({ event }) {
           params: { id: event._id },
         })
       }>
-      <View style={styles.giftAndData}>
-        <Icon type={event.type} />
-        <View style={styles.eventData}>
-          <Text style={styles.title}>{event.name}</Text>
-          <Text style={styles.type}>{event.type}</Text>
-          <View style={styles.date}>
-            <Text>
-              <MaterialIcons
-                name="calendar-month"
-                size={20}
-                color={colors.lightgray}
-              />
-            </Text>
-            <Text style={styles.dateText}>{convertDate(event.date)}</Text>
-          </View>
+      <Icon type={event.type} />
+      <View style={styles.eventData}>
+        <Text style={styles.title} numberOfLines={1}>
+          {event.name}
+        </Text>
+        <Text style={styles.type}>{event.type}</Text>
+        <View style={styles.date}>
+          <Text>
+            <MaterialIcons
+              name="calendar-month"
+              size={20}
+              color={colors.lightgray}
+            />
+          </Text>
+          <Text style={styles.dateText}>{convertDate(event.date)}</Text>
         </View>
       </View>
-      <Text>
+      <Text style={styles.arrow}>
         <MaterialIcons name="arrow-forward-ios" size={24} color={colors.gray} />
       </Text>
     </TouchableOpacity>
@@ -50,11 +50,6 @@ const styles = StyleSheet.create({
     padding: 10,
     gap: 20,
   },
-  giftAndData: {
-    gap: 20,
-    flexDirection: "row",
-    alignItems: "center",
-  },
   title: {
     textTransform: "uppercase",
     fontSize: 20,
@@ -63,6 +58,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     color: colors.lightgray,
     gap: 5,
+    flex: 1,
   },
   type: {
     fontSize: 16,
@@ -76,5 +72,8 @@ const styles = StyleSheet.create({
   },
   dateText: {
     color: colors.lightgray,
+  },
+  arrow: {
+    width: 20,
   },
 });
