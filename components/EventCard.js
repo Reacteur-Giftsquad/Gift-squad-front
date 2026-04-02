@@ -16,8 +16,7 @@ export default function EventCard({ event }) {
           pathname: "/(main)/eventDetail",
           params: { id: event._id },
         })
-      }
-    >
+      }>
       <View style={styles.giftAndData}>
         <Icon type={event.type} />
         <View style={styles.eventData}>
@@ -48,7 +47,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: 20,
+    padding: 10,
     gap: 20,
   },
   giftAndData: {
