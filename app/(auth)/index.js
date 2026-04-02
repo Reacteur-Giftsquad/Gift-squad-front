@@ -10,6 +10,7 @@ import SubmitButton from "../../components/SubmitButton";
 import LinkButton from "../../components/LinkButton";
 import colors from "../../assets/colors/colors.json";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { StatusBar } from "expo-status-bar";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
