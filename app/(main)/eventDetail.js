@@ -57,7 +57,7 @@ export default function EventDetail() {
   const handleAddParticipant = async () => {
     if (!email) return;
     try {
-      await api.post(`/invitations/create`, {
+      await api.post(`/invitation/send`, {
         eventId: id,
         senderEmail: user.email,
         receiverEmail: email,
