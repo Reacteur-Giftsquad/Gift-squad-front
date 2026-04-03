@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter, useFocusEffect } from "expo-router";
 import api from "../../utils/api";
 import { useAuth } from "../../context/AuthContext";
 import colors from "../../assets/colors/colors.json";
@@ -46,9 +46,11 @@ export default function GiftList() {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
 
   const totalGiftsPrice = gifts.reduce((sum, g) => sum + (g.price || 0), 0);
   const totalCollected = contributions.reduce((sum, c) => sum + (c.amount || 0), 0);
@@ -93,6 +95,47 @@ export default function GiftList() {
             <View style={styles.giftInfo}>
               <Text style={styles.giftName}>{gift.name}</Text>
               <Text style={styles.giftPrice}>{gift.price}€</Text>
+            </View>
+            <View style={{ flexDirection: "row", gap: 8 }}>
+              <TouchableOpacity
+                onPress={() =>
+                  router.push({
+                    pathname: "/(main)/editGift",
+                    params: {
+                      giftId: gift._id,
+                      giftName: gift.name,
+                      giftPrice: String(gift.price),
+                      giftLink: gift.link || "",
+                      giftImage: gift.image_url || "",
+                    },
+                  })
+                }>
+                <MaterialIcons name="edit" size={22} color={colors.gray} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  Alert.alert(
+                    "Supprimer",
+                    `Supprimer "${gift.name}" ?`,
+                    [
+                      { text: "Annuler", style: "cancel" },
+                      {
+                        text: "Supprimer",
+                        style: "destructive",
+                        onPress: async () => {
+                          try {
+                            await api.delete(`/gift/${gift._id}`);
+                            fetchData();
+                          } catch (error) {
+                            Alert.alert("Erreur", "Impossible de supprimer le cadeau");
+                          }
+                        },
+                      },
+                    ],
+                  )
+                }>
+                <MaterialIcons name="delete" size={22} color={colors.red} />
+              </TouchableOpacity>
             </View>
           </View>
         ))}

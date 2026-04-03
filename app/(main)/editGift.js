@@ -17,15 +17,16 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import colors from "../../assets/colors/colors.json";
 import s from "../../styles/addGiftStyles";
 
-export default function AddGift() {
-  const { eventId } = useLocalSearchParams();
+export default function EditGift() {
+  const { giftId, giftName, giftPrice, giftLink, giftImage } =
+    useLocalSearchParams();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState(giftImage || null);
   const [form, setForm] = useState({
-    name: "",
-    price: "",
-    link: "",
+    name: giftName || "",
+    price: giftPrice || "",
+    link: giftLink || "",
   });
 
   const pickFromCamera = async () => {
@@ -56,6 +57,24 @@ export default function AddGift() {
     }
   };
 
+  const handleDelete = () => {
+    Alert.alert("Supprimer ce cadeau", "Cette action est irréversible.", [
+      { text: "Annuler", style: "cancel" },
+      {
+        text: "Supprimer",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await api.delete(`/gift/${giftId}`);
+            router.back();
+          } catch (error) {
+            Alert.alert("Erreur", error.response?.data?.message || "Erreur serveur");
+          }
+        },
+      },
+    ]);
+  };
+
   const handleSubmit = async () => {
     if (!form.name || !form.price) {
       return Alert.alert("Erreur", "Le nom et le prix sont obligatoires");
@@ -63,24 +82,12 @@ export default function AddGift() {
 
     setIsSubmitting(true);
     try {
-      const formData = new FormData();
-      formData.append("name", form.name);
-      formData.append("price", form.price);
-      formData.append("link", form.link);
-      formData.append("event", eventId);
-      if (image) {
-        const filename = image.split("/").pop();
-        const ext = filename.split(".").pop();
-        formData.append("image", {
-          uri: image,
-          name: filename,
-          type: `image/${ext === "jpg" ? "jpeg" : ext}`,
-        });
-      }
-      await api.post("/gift/create", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      await api.put(`/gift/modify/${giftId}`, {
+        name: form.name,
+        price: Number(form.price),
+        link: form.link,
       });
-      Alert.alert("Succès", "Cadeau ajouté !", [
+      Alert.alert("Succès", "Cadeau modifié !", [
         { text: "OK", onPress: () => router.back() },
       ]);
     } catch (error) {
@@ -99,12 +106,12 @@ export default function AddGift() {
         <TouchableOpacity onPress={() => router.back()}>
           <MaterialIcons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text style={s.headerTitle}>Ajouter un cadeau</Text>
+        <Text style={s.headerTitle}>Modifier un cadeau</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView contentContainerStyle={s.content}>
-        <Title text="AJOUTER UN CADEAU" heading="h1" />
+        <Title text="MODIFIER UN CADEAU" heading="h1" />
 
         <Input
           title="Nom"
@@ -149,10 +156,24 @@ export default function AddGift() {
         />
 
         <SubmitButton
-          text="Ajouter le cadeau"
+          text="Modifier le cadeau"
           onPress={handleSubmit}
           isSubmitting={isSubmitting}
         />
+
+        <TouchableOpacity
+          style={{
+            backgroundColor: colors.red,
+            padding: 14,
+            borderRadius: 8,
+            alignItems: "center",
+            marginTop: 12,
+          }}
+          onPress={handleDelete}>
+          <Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}>
+            Supprimer le cadeau
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );
