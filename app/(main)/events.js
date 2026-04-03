@@ -45,6 +45,18 @@ export default function Events() {
     fetchData();
   }, []);
 
+  const handleDelete = async (eventId) => {
+    try {
+      await api.delete(`/events/${eventId}`);
+      setData((prev) => prev.filter((e) => e._id !== eventId));
+    } catch (error) {
+      Alert.alert(
+        "Erreur",
+        error.response?.data?.message || "Impossible de supprimer l'événement",
+      );
+    }
+  };
+
   return (
     <ScreenWithMenu
       title="Mes événements"
@@ -61,7 +73,9 @@ export default function Events() {
             data={data}
             keyExtractor={(item) => String(item._id)}
             showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => <EventCard event={item} />}
+            renderItem={({ item }) => (
+              <EventCard event={item} onDelete={handleDelete} />
+            )}
           />
         )}
         <SubmitButton
