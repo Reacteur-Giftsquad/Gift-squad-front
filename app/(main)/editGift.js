@@ -46,7 +46,7 @@ export default function EditGift() {
 
     setIsSubmitting(true);
     try {
-      await api.put(`/gift/${giftId}`, {
+      await api.put(`/gift/modify/${giftId}`, {
         name: form.name,
         price: Number(form.price),
         link: form.link,

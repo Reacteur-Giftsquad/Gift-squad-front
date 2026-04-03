@@ -2,6 +2,7 @@
 // This file centralizes API calls and handles dynamic base URL selection for development and production environments.
 import axios from "axios";
 import Constants from "expo-constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const REMOTE_URL = process.env.EXPO_PUBLIC_API_URL;
 const LOCAL_PORT = 3000;

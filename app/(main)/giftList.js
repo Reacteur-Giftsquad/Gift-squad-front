@@ -16,6 +16,8 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import SubmitButton from "../../components/SubmitButton";
 import Title from "../../components/Title";
 import styles from "../../styles/giftListStyles";
+import { useFocusEffect } from "expo-router";
+import { useCallback } from "react";
 
 export default function GiftList() {
   const { eventId, eventName } = useLocalSearchParams();
@@ -46,12 +48,17 @@ export default function GiftList() {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, []),
+  );
 
   const totalGiftsPrice = gifts.reduce((sum, g) => sum + (g.price || 0), 0);
-  const totalCollected = contributions.reduce((sum, c) => sum + (c.amount || 0), 0);
+  const totalCollected = contributions.reduce(
+    (sum, c) => sum + (c.amount || 0),
+    0,
+  );
 
   if (isLoading) {
     return (
@@ -72,27 +79,79 @@ export default function GiftList() {
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
-        <Title
-          text={`Idées de cadeaux pour ${eventName || ""}`}
-          heading="h1"
-        />
+        <Title text={`Idées de cadeaux pour ${eventName || ""}`} heading="h1" />
         <Text style={styles.collectedText}>
-          Montant total collecté : <Text style={{ fontWeight: "bold" }}>{totalCollected}€</Text> sur{" "}
+          Montant total collecté :{" "}
+          <Text style={{ fontWeight: "bold" }}>{totalCollected}€</Text> sur{" "}
           <Text style={{ fontWeight: "bold" }}>{totalGiftsPrice}€</Text>
         </Text>
 
         {gifts.map((gift) => (
           <View key={gift._id} style={styles.giftCard}>
             {gift.image_url ? (
-              <Image source={{ uri: gift.image_url }} style={styles.giftImage} />
+              <Image
+                source={{ uri: gift.image_url }}
+                style={styles.giftImage}
+              />
             ) : (
               <View style={[styles.giftImage, styles.giftImagePlaceholder]}>
-                <MaterialIcons name="card-giftcard" size={40} color={colors.gray} />
+                <MaterialIcons
+                  name="card-giftcard"
+                  size={40}
+                  color={colors.gray}
+                />
               </View>
             )}
+
             <View style={styles.giftInfo}>
               <Text style={styles.giftName}>{gift.name}</Text>
               <Text style={styles.giftPrice}>{gift.price}€</Text>
+            </View>
+
+            {/* Icônes edit + delete */}
+            <View style={styles.giftActions}>
+              <TouchableOpacity
+                onPress={() =>
+                  router.push({
+                    pathname: "/(main)/editGift",
+                    params: {
+                      giftId: gift._id,
+                      name: gift.name,
+                      price: String(gift.price),
+                      link: gift.link || "",
+                      image_url: gift.image_url || "",
+                    },
+                  })
+                }
+              >
+                <MaterialIcons name="edit" size={22} color={colors.gray} />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  Alert.alert(
+                    "Supprimer",
+                    "Voulez-vous vraiment supprimer ce cadeau ?",
+                    [
+                      { text: "Annuler", style: "cancel" },
+                      {
+                        text: "Supprimer",
+                        style: "destructive",
+                        onPress: async () => {
+                          try {
+                            await api.delete(`/gift/${gift._id}`);
+                            fetchData(); // rafraîchit la liste
+                          } catch (err) {
+                            Alert.alert("Erreur", "Impossible de supprimer");
+                          }
+                        },
+                      },
+                    ],
+                  );
+                }}
+              >
+                <MaterialIcons name="delete" size={22} color="red" />
+              </TouchableOpacity>
             </View>
           </View>
         ))}

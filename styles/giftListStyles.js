@@ -70,4 +70,11 @@ export default StyleSheet.create({
     color: colors.green,
     fontStyle: "italic",
   },
+
+  giftActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    gap: 10,
+  },
 });
