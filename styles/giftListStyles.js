@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 import Constants from "expo-constants";
 import colors from "../assets/colors/colors.json";
+const navigationBar = Constants.statusBarHeight;
 
 export default StyleSheet.create({
   container: {
@@ -32,7 +33,7 @@ export default StyleSheet.create({
   content: {
     padding: 15,
     gap: 15,
-    paddingBottom: 30,
+    paddingBlockEnd: 270 + navigationBar,
   },
   collectedText: {
     fontSize: 14,
