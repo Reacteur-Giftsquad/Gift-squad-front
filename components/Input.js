@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 import {
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -18,9 +19,9 @@ const Input = ({ title, type, placeholder, setState, value }) => {
   const isEmail = type === "email";
   const isDate = type === "date";
 
-  // used by DateTimePickerAndroid
   const [date, setDate] = useState(new Date());
   const [isDateSelected, setIsDateSelected] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
 
   const formatDate = (date) => {
     const day = String(date.getDate()).padStart(2, "0");
@@ -30,34 +31,50 @@ const Input = ({ title, type, placeholder, setState, value }) => {
     return `${day}/${month}/${year}`;
   };
 
-  const showDatepicker = () => {
-    DateTimePickerAndroid.open({
-      value: date,
-      onChange: (event, selectedDate) => {
-        setDate(selectedDate);
-        setIsDateSelected(true);
-        setState(date);
-      },
-      mode: "date",
-    });
+  const onDateChange = (_event, selectedDate) => {
+    if (Platform.OS === "android") {
+      setShowPicker(false);
+    }
+    if (selectedDate) {
+      setDate(selectedDate);
+      setIsDateSelected(true);
+      setState(selectedDate);
+    }
   };
 
   return (
     <View style={styles.inputContainer}>
       <Text style={styles.title}>{title}</Text>
       {isDate ? (
-        <Pressable style={styles.inputRow} onPress={showDatepicker}>
-          <Text style={styles.input}>
-            {isDateSelected ? formatDate(date) : "jj/mm/aaaa"}
-          </Text>
-          <Text style={styles.icon}>
-            <MaterialIcons
-              name="calendar-month"
-              size={20}
-              color={colors.lightgray}
+        <>
+          <Pressable style={styles.inputRow} onPress={() => setShowPicker(true)}>
+            <Text style={styles.input}>
+              {isDateSelected ? formatDate(date) : "jj/mm/aaaa"}
+            </Text>
+            <Text style={styles.icon}>
+              <MaterialIcons
+                name="calendar-month"
+                size={20}
+                color={colors.lightgray}
+              />
+            </Text>
+          </Pressable>
+          {showPicker && (
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display={Platform.OS === "ios" ? "spinner" : "default"}
+              onChange={onDateChange}
             />
-          </Text>
-        </Pressable>
+          )}
+          {Platform.OS === "ios" && showPicker && (
+            <Pressable onPress={() => setShowPicker(false)}>
+              <Text style={{ textAlign: "center", color: colors.green, padding: 8 }}>
+                Confirmer
+              </Text>
+            </Pressable>
+          )}
+        </>
       ) : (
         <View style={styles.inputRow}>
           <TextInput
