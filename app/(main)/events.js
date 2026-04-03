@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, FlatList, View } from "react-native";
+import { ActivityIndicator, Alert, FlatList, TouchableOpacity, View } from "react-native";
 import styles from "../../styles/globals";
 import { useEffect, useState } from "react";
 import api from "../../utils/api";
@@ -40,7 +40,13 @@ export default function Events() {
   }, []);
 
   return (
-    <ScreenWithMenu title="Mes événements">
+    <ScreenWithMenu
+      title="Mes événements"
+      rightIcon={
+        <TouchableOpacity onPress={() => router.push("/(main)/invitations")}>
+          <MaterialIcons name="mail" size={26} color="white" />
+        </TouchableOpacity>
+      }>
       <View style={styles.content}>
         {isLoading ? (
           <ActivityIndicator size="large" color={colors.green} />
