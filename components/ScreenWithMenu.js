@@ -15,7 +15,7 @@ import styles from "../styles/dashboardStyles";
 import Feather from "@expo/vector-icons/Feather";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
-export default function ScreenWithMenu({ title, children }) {
+export default function ScreenWithMenu({ title, children, rightIcon }) {
   const { logout } = useAuth();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -59,7 +59,7 @@ export default function ScreenWithMenu({ title, children }) {
           <MaterialIcons name="menu" size={28} color="white" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{title || "Gift Squad"}</Text>
-        <View style={{ width: 28 }} />
+        {rightIcon || <View style={{ width: 28 }} />}
       </View>
 
       {children}
