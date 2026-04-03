@@ -1,10 +1,18 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import colors from "../assets/colors/colors.json";
 import { useRouter } from "expo-router";
 import OutlineButton from "./OutlineButton";
+import api from "../utils/api";
 
-export default function GiftCard({ gift }) {
+export default function GiftCard({ gift, fetchData }) {
   const router = useRouter();
 
   const handleDeleteGift = () => {
