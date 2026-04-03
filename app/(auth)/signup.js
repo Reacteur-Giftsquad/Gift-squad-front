@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { View, Alert } from "react-native";
+import {
+  View,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from "react-native";
 import { useRouter } from "expo-router";
 import styles from "../../styles/globals";
 import api from "../../utils/api";
@@ -11,8 +17,11 @@ import SubmitButton from "../../components/SubmitButton";
 import LinkButton from "../../components/LinkButton";
 import colors from "../../assets/colors/colors.json";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useBehavior } from "../../utils/useBehavior";
 
 export default function SignupScreen() {
+  const behaviour = useBehavior();
+
   const [form, setForm] = useState({
     firstname: "",
     lastname: "",
@@ -52,9 +61,12 @@ export default function SignupScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={behaviour}
+      enabled={Platform.OS === "android"}
+      style={styles.container}>
       <Header title="Signup" />
-      <View style={styles.content}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content}>
         <Input
           title="Prenom"
           placeholder="Votre prenom"
@@ -104,8 +116,8 @@ export default function SignupScreen() {
           onPress={() => router.push("/")}
           icon={<MaterialIcons name="login" size={24} color={colors.green} />}
         />
-      </View>
+      </ScrollView>
       <StatusBar style="light" />
-    </View>
+    </KeyboardAvoidingView>
   );
 }
