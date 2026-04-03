@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import colors from "../assets/colors/colors.json";
 
 const Input = ({ title, type, placeholder, setState, value }) => {
   const [showPassword, setShowPassword] = useState(false);
