@@ -47,7 +47,10 @@ const Input = ({ title, type, placeholder, setState, value }) => {
       <Text style={styles.title}>{title}</Text>
       {isDate ? (
         <>
-          <Pressable style={styles.inputRow} onPress={() => setShowPicker(true)}>
+          <Pressable
+            style={styles.inputRow}
+            onPress={() => setShowPicker(true)}
+          >
             <Text style={styles.input}>
               {isDateSelected ? formatDate(date) : "jj/mm/aaaa"}
             </Text>
@@ -69,7 +72,9 @@ const Input = ({ title, type, placeholder, setState, value }) => {
           )}
           {Platform.OS === "ios" && showPicker && (
             <Pressable onPress={() => setShowPicker(false)}>
-              <Text style={{ textAlign: "center", color: colors.green, padding: 8 }}>
+              <Text
+                style={{ textAlign: "center", color: colors.green, padding: 8 }}
+              >
                 Confirmer
               </Text>
             </Pressable>
@@ -90,7 +95,8 @@ const Input = ({ title, type, placeholder, setState, value }) => {
           {isPassword && (
             <TouchableOpacity
               onPress={() => setShowPassword(!showPassword)}
-              style={styles.icon}>
+              style={styles.icon}
+            >
               <MaterialIcons
                 name={showPassword ? "visibility-off" : "visibility"}
                 size={22}
