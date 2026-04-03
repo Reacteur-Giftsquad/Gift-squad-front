@@ -92,7 +92,9 @@ export default function GiftList() {
           keyExtractor={(item) => String(item._id)}
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-          renderItem={({ item }) => <GiftCard gift={item} />}
+          renderItem={({ item }) => (
+            <GiftCard gift={item} fetchData={fetchData} />
+          )}
         />
         <SubmitButton
           text="Ajouter un cadeau"
