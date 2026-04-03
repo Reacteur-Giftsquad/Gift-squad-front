@@ -130,6 +130,34 @@ export default StyleSheet.create({
     borderRadius: 8,
     padding: 10,
   },
+  drawResultBar: {
+    backgroundColor: "#fff8e1",
+    borderWidth: 2,
+    borderColor: "#f0c040",
+    borderRadius: 8,
+    padding: 14,
+    alignItems: "center",
+  },
+  drawResultText: {
+    fontSize: 16,
+    color: "#e65100",
+    fontWeight: "600",
+  },
+  drawResultName: {
+    fontWeight: "bold",
+    color: "#e65100",
+  },
+  drawDoneBtn: {
+    backgroundColor: "#e0e0e0",
+    borderRadius: 8,
+    padding: 14,
+    alignItems: "center",
+  },
+  drawDoneText: {
+    color: "#999",
+    fontSize: 16,
+    fontWeight: "600",
+  },
   drawSection: {
     marginTop: 20,
     gap: 15,

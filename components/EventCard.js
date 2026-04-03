@@ -1,12 +1,23 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import colors from "../assets/colors/colors.json";
 import convertDate from "../utils/convertDate";
 import Icon from "./Icon";
 
-export default function EventCard({ event }) {
+export default function EventCard({ event, onDelete }) {
   const router = useRouter();
+
+  const handleLongPress = () => {
+    Alert.alert("Supprimer", `Supprimer "${event.name}" ?`, [
+      { text: "Annuler", style: "cancel" },
+      {
+        text: "Supprimer",
+        style: "destructive",
+        onPress: () => onDelete(event._id),
+      },
+    ]);
+  };
 
   return (
     <TouchableOpacity
@@ -16,7 +27,8 @@ export default function EventCard({ event }) {
           pathname: "/(main)/eventDetail",
           params: { id: event._id },
         })
-      }>
+      }
+      onLongPress={handleLongPress}>
       <Icon type={event.type} />
       <View style={styles.eventData}>
         <Text style={styles.title} numberOfLines={1}>

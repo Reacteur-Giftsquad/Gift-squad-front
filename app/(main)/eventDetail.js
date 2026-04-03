@@ -81,6 +81,10 @@ export default function EventDetail() {
   if (!event) return null;
 
   const isSecretSanta = event.type === "Secret Santa";
+  const isDrawn = event.status === "drawn";
+  const myDraw = event.secret_Santa_Draw?.find(
+    (d) => (d.giver?._id || d.giver) === user._id,
+  );
   const totalCollected = contributions.reduce((sum, c) => sum + (c.amount || 0), 0);
   const participatingCount = contributions.length;
 
@@ -150,6 +154,17 @@ export default function EventDetail() {
             </View>
           )}
 
+          {isDrawn && myDraw && (
+            <View style={styles.drawResultBar}>
+              <Text style={styles.drawResultText}>
+                VOUS AVEZ TIRÉ{" "}
+                <Text style={styles.drawResultName}>
+                  {myDraw.receiver?.pseudo || myDraw.receiver?.firstname}
+                </Text>
+              </Text>
+            </View>
+          )}
+
           {!isSecretSanta && (
             <SubmitButton
               text="Liste de cadeaux"
@@ -181,6 +196,9 @@ export default function EventDetail() {
                   {member.pseudo || member.firstname}
                   {isYou && <Text style={styles.youLabel}>  (vous)</Text>}
                 </Text>
+                {isSecretSanta && isDrawn && !isYou && (
+                  <MaterialIcons name="visibility" size={22} color={colors.green} />
+                )}
                 {!isSecretSanta && (
                   contribution ? (
                     <Text style={styles.contributionBadge}>
@@ -218,14 +236,22 @@ export default function EventDetail() {
 
         {isSecretSanta && (
           <View style={styles.drawSection}>
-            <Text style={styles.warningText}>
-              <Text style={{ fontWeight: "bold" }}>Attention : </Text>
-              Une fois le tirage effectué, il ne sera plus possible de modifier la liste des participants.
-            </Text>
-            <SubmitButton
-              text="Effectuer le tirage au sort"
-              onPress={() => setShowDrawModal(true)}
-            />
+            {isDrawn ? (
+              <View style={styles.drawDoneBtn}>
+                <Text style={styles.drawDoneText}>Tirage au sort effectué</Text>
+              </View>
+            ) : (
+              <>
+                <Text style={styles.warningText}>
+                  <Text style={{ fontWeight: "bold" }}>Attention : </Text>
+                  Une fois le tirage effectué, il ne sera plus possible de modifier la liste des participants.
+                </Text>
+                <SubmitButton
+                  text="Effectuer le tirage au sort"
+                  onPress={() => setShowDrawModal(true)}
+                />
+              </>
+            )}
           </View>
         )}
       </ScrollView>
