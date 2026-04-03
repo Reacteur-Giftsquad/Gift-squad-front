@@ -134,6 +134,11 @@ export default StyleSheet.create({
     marginTop: 20,
     gap: 15,
   },
+  warningText: {
+    fontSize: 14,
+    color: colors.gray,
+    lineHeight: 20,
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
