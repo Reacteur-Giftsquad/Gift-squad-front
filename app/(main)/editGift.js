@@ -6,6 +6,8 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
@@ -16,11 +18,14 @@ import Title from "../../components/Title";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import colors from "../../assets/colors/colors.json";
 import s from "../../styles/addGiftStyles";
+import { useBehavior } from "../../utils/useBehavior";
+import FilledIcon from "../../components/FilledIcon";
 
 export default function EditGift() {
   const { giftId, giftName, giftPrice, giftLink, giftImage } =
     useLocalSearchParams();
   const router = useRouter();
+  const behaviour = useBehavior();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [image, setImage] = useState(giftImage || null);
   const [form, setForm] = useState({
@@ -32,7 +37,10 @@ export default function EditGift() {
   const pickFromCamera = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== "granted") {
-      return Alert.alert("Permission refusée", "L'accès à la caméra est nécessaire");
+      return Alert.alert(
+        "Permission refusée",
+        "L'accès à la caméra est nécessaire",
+      );
     }
     const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
@@ -46,7 +54,10 @@ export default function EditGift() {
   const pickFromGallery = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      return Alert.alert("Permission refusée", "L'accès à la galerie est nécessaire");
+      return Alert.alert(
+        "Permission refusée",
+        "L'accès à la galerie est nécessaire",
+      );
     }
     const result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
@@ -68,7 +79,10 @@ export default function EditGift() {
             await api.delete(`/gift/${giftId}`);
             router.back();
           } catch (error) {
-            Alert.alert("Erreur", error.response?.data?.message || "Erreur serveur");
+            Alert.alert(
+              "Erreur",
+              error.response?.data?.message || "Erreur serveur",
+            );
           }
         },
       },
@@ -82,11 +96,24 @@ export default function EditGift() {
 
     setIsSubmitting(true);
     try {
-      await api.put(`/gift/modify/${giftId}`, {
-        name: form.name,
-        price: Number(form.price),
-        link: form.link,
+      const formData = new FormData();
+      formData.append("name", form.name);
+      formData.append("price", Number(form.price));
+      formData.append("link", form.link);
+
+      if (image) {
+        const filename = image.split("/").pop();
+        const ext = filename.split(".").pop();
+        formData.append("image", {
+          uri: image,
+          name: filename,
+          type: `image/${ext === "jpg" ? "jpeg" : ext}`,
+        });
+      }
+      await api.put(`/gift/modify/${giftId}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
+
       Alert.alert("Succès", "Cadeau modifié !", [
         { text: "OK", onPress: () => router.back() },
       ]);
@@ -101,7 +128,10 @@ export default function EditGift() {
   };
 
   return (
-    <View style={s.container}>
+    <KeyboardAvoidingView
+      behavior={behaviour}
+      enabled={Platform.OS === "android"}
+      style={s.container}>
       <View style={s.header}>
         <TouchableOpacity onPress={() => router.back()}>
           <MaterialIcons name="arrow-back" size={24} color="white" />
@@ -123,18 +153,25 @@ export default function EditGift() {
           title="Prix (€)"
           placeholder="Ex: 25"
           type="price"
-          setState={(v) => setForm({ ...form, price: v.replace(/[^0-9]/g, "") })}
+          setState={(v) =>
+            setForm({ ...form, price: v.replace(/[^0-9]/g, "") })
+          }
           value={form.price}
         />
 
         <Text style={s.label}>Image du cadeau</Text>
         <View style={s.imageButtons}>
-          <TouchableOpacity style={s.imageBtn} onPress={pickFromCamera}>
+          <FilledIcon onPress={pickFromCamera}>
             <MaterialIcons name="photo-camera" size={30} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity style={s.imageBtn} onPress={pickFromGallery}>
+          </FilledIcon>
+          <FilledIcon onPress={pickFromGallery}>
             <MaterialIcons name="photo-library" size={30} color="white" />
-          </TouchableOpacity>
+          </FilledIcon>
+          {image && (
+            <FilledIcon onPress={() => setImage(null)} red>
+              <MaterialIcons name="delete" size={30} color="white" />
+            </FilledIcon>
+          )}
         </View>
 
         <View style={s.imagePreview}>
@@ -160,21 +197,12 @@ export default function EditGift() {
           onPress={handleSubmit}
           isSubmitting={isSubmitting}
         />
-
-        <TouchableOpacity
-          style={{
-            backgroundColor: colors.red,
-            padding: 14,
-            borderRadius: 8,
-            alignItems: "center",
-            marginTop: 12,
-          }}
-          onPress={handleDelete}>
-          <Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}>
-            Supprimer le cadeau
-          </Text>
-        </TouchableOpacity>
+        <SubmitButton
+          onPress={handleDelete}
+          bgColor={colors.red}
+          text="Supprimer le cadeau"
+        />
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 }

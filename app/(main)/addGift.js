@@ -19,6 +19,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import colors from "../../assets/colors/colors.json";
 import s from "../../styles/addGiftStyles";
 import { useBehavior } from "../../utils/useBehavior";
+import FilledIcon from "../../components/FilledIcon";
 
 export default function AddGift() {
   const { eventId } = useLocalSearchParams();
@@ -137,12 +138,17 @@ export default function AddGift() {
 
         <Text style={s.label}>Image du cadeau</Text>
         <View style={s.imageButtons}>
-          <TouchableOpacity style={s.imageBtn} onPress={pickFromCamera}>
+          <FilledIcon onPress={pickFromCamera}>
             <MaterialIcons name="photo-camera" size={30} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity style={s.imageBtn} onPress={pickFromGallery}>
+          </FilledIcon>
+          <FilledIcon onPress={pickFromGallery}>
             <MaterialIcons name="photo-library" size={30} color="white" />
-          </TouchableOpacity>
+          </FilledIcon>
+          {image && (
+            <FilledIcon onPress={() => setImage(null)} red>
+              <MaterialIcons name="delete" size={30} color="white" />
+            </FilledIcon>
+          )}
         </View>
 
         <View style={s.imagePreview}>
