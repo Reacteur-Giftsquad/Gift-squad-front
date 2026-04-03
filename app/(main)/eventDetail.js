@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   Alert,
   Modal,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import api from "../../utils/api";
@@ -19,6 +21,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import SubmitButton from "../../components/SubmitButton";
 import Title from "../../components/Title";
 import styles from "../../styles/eventDetailStyles";
+import { useBehavior } from "../../utils/useBehavior";
 
 export default function EventDetail() {
   const { id } = useLocalSearchParams();
@@ -29,6 +32,7 @@ export default function EventDetail() {
   const [email, setEmail] = useState("");
   const [contributions, setContributions] = useState([]);
   const [showDrawModal, setShowDrawModal] = useState(false);
+  const behaviour = useBehavior();
 
   const fetchEvent = async () => {
     try {
@@ -84,7 +88,10 @@ export default function EventDetail() {
   if (!event) return null;
 
   const isSecretSanta = event.type === "Secret Santa";
-  const totalCollected = contributions.reduce((sum, c) => sum + (c.amount || 0), 0);
+  const totalCollected = contributions.reduce(
+    (sum, c) => sum + (c.amount || 0),
+    0,
+  );
   const participatingCount = contributions.length;
 
   const handleConfirmDraw = async () => {
@@ -103,7 +110,10 @@ export default function EventDetail() {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={behaviour}
+      enabled={Platform.OS === "android"}
+      style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
           <MaterialIcons name="arrow-back" size={24} color="white" />
@@ -128,7 +138,8 @@ export default function EventDetail() {
               </Text>
               {!isSecretSanta && (
                 <Text style={styles.budgetSub}>
-                  {participatingCount}/{event.members?.length || 0} PARTICIPANTS PARTICIPENT
+                  {participatingCount}/{event.members?.length || 0} PARTICIPANTS
+                  PARTICIPENT
                 </Text>
               )}
             </View>
@@ -151,36 +162,43 @@ export default function EventDetail() {
         <View style={styles.participantsSection}>
           <Title text="PARTICIPANTS" heading="h2" />
 
-          {[...(event.members || [])].sort((a) => a.user?._id === user._id ? -1 : 1).map((item, index) => {
-            const member = item.user;
-            if (!member) return null;
-            const isYou = member._id === user._id;
-            const contribution = contributions.find(
-              (c) => c.user === member._id || c.user?._id === member._id,
-            );
+          {[...(event.members || [])]
+            .sort((a) => (a.user?._id === user._id ? -1 : 1))
+            .map((item, index) => {
+              const member = item.user;
+              if (!member) return null;
+              const isYou = member._id === user._id;
+              const contribution = contributions.find(
+                (c) => c.user === member._id || c.user?._id === member._id,
+              );
 
-            return (
-              <View key={member._id || index} style={styles.participantRow}>
-                <Text style={styles.participantName}>
-                  {member.pseudo || member.firstname}
-                  {isYou && <Text style={styles.youLabel}>  (vous)</Text>}
-                </Text>
-                {!isSecretSanta && (
-                  contribution ? (
-                    <Text style={styles.contributionBadge}>
-                      {contribution.amount}€
-                    </Text>
-                  ) : isYou ? (
-                    <TouchableOpacity style={styles.participateBtn}>
-                      <Text style={styles.participateBtnText}>Participer</Text>
-                    </TouchableOpacity>
-                  ) : (
-                    <MaterialIcons name="hourglass-empty" size={20} color={colors.gray} />
-                  )
-                )}
-              </View>
-            );
-          })}
+              return (
+                <View key={member._id || index} style={styles.participantRow}>
+                  <Text style={styles.participantName}>
+                    {member.pseudo || member.firstname}
+                    {isYou && <Text style={styles.youLabel}> (vous)</Text>}
+                  </Text>
+                  {!isSecretSanta &&
+                    (contribution ? (
+                      <Text style={styles.contributionBadge}>
+                        {contribution.amount}€
+                      </Text>
+                    ) : isYou ? (
+                      <TouchableOpacity style={styles.participateBtn}>
+                        <Text style={styles.participateBtnText}>
+                          Participer
+                        </Text>
+                      </TouchableOpacity>
+                    ) : (
+                      <MaterialIcons
+                        name="hourglass-empty"
+                        size={20}
+                        color={colors.gray}
+                      />
+                    ))}
+                </View>
+              );
+            })}
 
           <Text style={styles.addLabel}>Ajouter un participant</Text>
           <View style={styles.addRow}>
@@ -192,7 +210,9 @@ export default function EventDetail() {
               keyboardType="email-address"
               autoCapitalize="none"
             />
-            <TouchableOpacity style={styles.addBtn} onPress={handleAddParticipant}>
+            <TouchableOpacity
+              style={styles.addBtn}
+              onPress={handleAddParticipant}>
               <MaterialIcons name="add" size={24} color="white" />
             </TouchableOpacity>
           </View>
@@ -202,7 +222,8 @@ export default function EventDetail() {
           <View style={styles.drawSection}>
             <Text style={styles.warningText}>
               <Text style={{ fontWeight: "bold" }}>Attention : </Text>
-              Une fois le tirage effectué, il ne sera plus possible de modifier la liste des participants.
+              Une fois le tirage effectué, il ne sera plus possible de modifier
+              la liste des participants.
             </Text>
             <SubmitButton
               text="Effectuer le tirage au sort"
@@ -228,32 +249,39 @@ export default function EventDetail() {
               Êtes-vous sûr de vouloir effectuer le tirage au sort ?
             </Text>
             <Text style={styles.modalTextBold}>
-              Attention : <Text style={{ fontWeight: "normal" }}>Cette action est irréversible.</Text>
+              Attention :{" "}
+              <Text style={{ fontWeight: "normal" }}>
+                Cette action est irréversible.
+              </Text>
             </Text>
 
             <View style={styles.modalBullets}>
-              <Text style={styles.modalBullet}>•  Tous les participants seront notifiés par email</Text>
-              <Text style={styles.modalBullet}>•  Il ne sera plus possible d'ajouter de nouveaux participants</Text>
-              <Text style={styles.modalBullet}>•  Le résultat du tirage sera définitif</Text>
+              <Text style={styles.modalBullet}>
+                • Tous les participants seront notifiés par email
+              </Text>
+              <Text style={styles.modalBullet}>
+                • Il ne sera plus possible d'ajouter de nouveaux participants
+              </Text>
+              <Text style={styles.modalBullet}>
+                • Le résultat du tirage sera définitif
+              </Text>
             </View>
 
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={styles.modalCancelBtn}
-                onPress={() => setShowDrawModal(false)}
-              >
+                onPress={() => setShowDrawModal(false)}>
                 <Text style={styles.modalCancelText}>Annuler</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.modalConfirmBtn}
-                onPress={handleConfirmDraw}
-              >
+                onPress={handleConfirmDraw}>
                 <Text style={styles.modalConfirmText}>Confirmer le tirage</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </Modal>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
