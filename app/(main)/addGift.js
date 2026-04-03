@@ -6,6 +6,8 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  Platform,
+  KeyboardAvoidingView,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
@@ -16,10 +18,12 @@ import Title from "../../components/Title";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import colors from "../../assets/colors/colors.json";
 import s from "../../styles/addGiftStyles";
+import { useBehavior } from "../../utils/useBehavior";
 
 export default function AddGift() {
   const { eventId } = useLocalSearchParams();
   const router = useRouter();
+  const behaviour = useBehavior();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [image, setImage] = useState(null);
   const [form, setForm] = useState({
@@ -31,7 +35,10 @@ export default function AddGift() {
   const pickFromCamera = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== "granted") {
-      return Alert.alert("Permission refusée", "L'accès à la caméra est nécessaire");
+      return Alert.alert(
+        "Permission refusée",
+        "L'accès à la caméra est nécessaire",
+      );
     }
     const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
@@ -45,7 +52,10 @@ export default function AddGift() {
   const pickFromGallery = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      return Alert.alert("Permission refusée", "L'accès à la galerie est nécessaire");
+      return Alert.alert(
+        "Permission refusée",
+        "L'accès à la galerie est nécessaire",
+      );
     }
     const result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
@@ -94,7 +104,10 @@ export default function AddGift() {
   };
 
   return (
-    <View style={s.container}>
+    <KeyboardAvoidingView
+      behavior={behaviour}
+      enabled={Platform.OS === "android"}
+      style={s.container}>
       <View style={s.header}>
         <TouchableOpacity onPress={() => router.back()}>
           <MaterialIcons name="arrow-back" size={24} color="white" />
@@ -116,7 +129,9 @@ export default function AddGift() {
           title="Prix (€)"
           placeholder="Ex: 25"
           type="price"
-          setState={(v) => setForm({ ...form, price: v.replace(/[^0-9]/g, "") })}
+          setState={(v) =>
+            setForm({ ...form, price: v.replace(/[^0-9]/g, "") })
+          }
           value={form.price}
         />
 
@@ -154,6 +169,6 @@ export default function AddGift() {
           isSubmitting={isSubmitting}
         />
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
