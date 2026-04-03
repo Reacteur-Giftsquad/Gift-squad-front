@@ -29,21 +29,18 @@ export default function EventDetail() {
   const [email, setEmail] = useState("");
   const [contributions, setContributions] = useState([]);
   const [showDrawModal, setShowDrawModal] = useState(false);
+  const [showContribModal, setShowContribModal] = useState(false);
+  const [contribAmount, setContribAmount] = useState("");
 
   const fetchEvent = async () => {
     try {
       const { data } = await api.get(`/events/${id}`);
       setEvent(data);
 
-      // Fetch contributions for this event
       try {
-        const contribRes = await api.get(`/contributions`, {
-          params: { eventId: id },
-        });
+        const contribRes = await api.get(`/contribution/event/${id}`);
         setContributions(contribRes.data || []);
-      } catch {
-        // contributions route may not exist yet
-      }
+      } catch {}
     } catch (error) {
       Alert.alert("Erreur", "Impossible de charger l'événement");
     }
@@ -99,6 +96,25 @@ export default function EventDetail() {
       } else {
         Alert.alert("Erreur", "Impossible de se connecter au serveur");
       }
+    }
+  };
+
+  const handleContribute = async () => {
+    const amount = Number(contribAmount);
+    if (!amount || amount <= 0) {
+      return Alert.alert("Erreur", "Veuillez entrer un montant valide");
+    }
+    try {
+      await api.post("/contribution/create", {
+        event: id,
+        user: user._id,
+        amount,
+      });
+      setShowContribModal(false);
+      setContribAmount("");
+      fetchEvent();
+    } catch (error) {
+      Alert.alert("Erreur", error.response?.data?.message || "Erreur serveur");
     }
   };
 
@@ -171,7 +187,9 @@ export default function EventDetail() {
                       {contribution.amount}€
                     </Text>
                   ) : isYou ? (
-                    <TouchableOpacity style={styles.participateBtn}>
+                    <TouchableOpacity
+                      style={styles.participateBtn}
+                      onPress={() => setShowContribModal(true)}>
                       <Text style={styles.participateBtnText}>Participer</Text>
                     </TouchableOpacity>
                   ) : (
@@ -251,6 +269,52 @@ export default function EventDetail() {
                 <Text style={styles.modalConfirmText}>Confirmer le tirage</Text>
               </TouchableOpacity>
             </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal visible={showContribModal} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalBox}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>VOTRE PARTICIPATION</Text>
+              <TouchableOpacity onPress={() => setShowContribModal(false)}>
+                <MaterialIcons name="close" size={24} color="#333" />
+              </TouchableOpacity>
+            </View>
+
+            <Text style={[styles.modalText, { fontWeight: "bold" }]}>
+              Combien voulez-vous donner ?
+            </Text>
+
+            <TextInput
+              style={{
+                borderWidth: 1,
+                borderColor: "#d1d1d1",
+                borderRadius: 8,
+                padding: 12,
+                fontSize: 16,
+                marginVertical: 16,
+              }}
+              placeholder="Montant en €"
+              keyboardType="numeric"
+              value={contribAmount}
+              onChangeText={(v) => setContribAmount(v.replace(/[^0-9]/g, ""))}
+            />
+
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#4ead51",
+                borderRadius: 8,
+                padding: 14,
+                alignItems: "center",
+                width: "100%",
+              }}
+              onPress={handleContribute}>
+              <Text style={{ color: "white", fontWeight: "bold", fontSize: 15 }}>
+                Confirmer
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
