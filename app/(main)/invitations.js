@@ -41,9 +41,7 @@ export default function Invitations() {
       await api.post(`/invitation/${invitationId}/${action}`);
       Alert.alert(
         "Succès",
-        action === "accept"
-          ? "Invitation acceptée !"
-          : "Invitation refusée.",
+        action === "accept" ? "Invitation acceptée !" : "Invitation refusée.",
       );
       fetchInvitations();
     } catch (error) {
@@ -90,15 +88,13 @@ export default function Invitations() {
         <View style={styles.actions}>
           <TouchableOpacity
             style={styles.refuseBtn}
-            onPress={() => handleRespond(item._id, "refuse")}
-          >
+            onPress={() => handleRespond(item._id, "refuse")}>
             <MaterialIcons name="close" size={20} color="white" />
             <Text style={styles.refuseText}>Refuser</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.acceptBtn}
-            onPress={() => handleRespond(item._id, "accept")}
-          >
+            onPress={() => handleRespond(item._id, "accept")}>
             <MaterialIcons name="check" size={20} color="white" />
             <Text style={styles.acceptText}>Accepter</Text>
           </TouchableOpacity>
@@ -119,7 +115,11 @@ export default function Invitations() {
           <ActivityIndicator size="large" color={colors.green} />
         ) : pendingInvitations.length === 0 ? (
           <View style={styles.empty}>
-            <MaterialIcons name="mail-outline" size={60} color={colors.lightgray} />
+            <MaterialIcons
+              name="mail-outline"
+              size={60}
+              color={colors.lightgray}
+            />
             <Text style={styles.emptyText}>Aucune invitation en attente</Text>
           </View>
         ) : (
@@ -128,6 +128,7 @@ export default function Invitations() {
             keyExtractor={(item) => item._id}
             renderItem={renderInvitation}
             contentContainerStyle={styles.list}
+            showsVerticalScrollIndicator={false}
           />
         )}
       </View>
