@@ -16,8 +16,6 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import SubmitButton from "../../components/SubmitButton";
 import Title from "../../components/Title";
 import styles from "../../styles/giftListStyles";
-import { useFocusEffect } from "expo-router";
-import { useCallback } from "react";
 
 export default function GiftList() {
   const { eventId, eventName } = useLocalSearchParams();
