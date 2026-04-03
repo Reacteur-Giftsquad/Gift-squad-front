@@ -1,4 +1,10 @@
-import { ActivityIndicator, Alert, FlatList, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import styles from "../../styles/globals";
 import { useEffect, useState } from "react";
 import api from "../../utils/api";
@@ -47,13 +53,14 @@ export default function Events() {
           <MaterialIcons name="mail" size={26} color="white" />
         </TouchableOpacity>
       }>
-      <View style={styles.content}>
+      <View style={styles.scrollContent}>
         {isLoading ? (
           <ActivityIndicator size="large" color={colors.green} />
         ) : (
           <FlatList
             data={data}
             keyExtractor={(item) => String(item._id)}
+            showsVerticalScrollIndicator={false}
             renderItem={({ item }) => <EventCard event={item} />}
           />
         )}

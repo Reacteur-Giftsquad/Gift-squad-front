@@ -56,7 +56,7 @@ export default function AddGift() {
     }
   };
 
-  const handleCreate = async () => {
+  const handleSubmit = async () => {
     if (!form.name || !form.price) {
       return Alert.alert("Erreur", "Le nom et le prix sont obligatoires");
     }
@@ -71,25 +71,19 @@ export default function AddGift() {
       if (image) {
         const filename = image.split("/").pop();
         const ext = filename.split(".").pop();
-        console.log("Image URI:", image);
-        console.log("Image file:", { uri: image, name: filename, type: `image/${ext === "jpg" ? "jpeg" : ext}` });
         formData.append("image", {
           uri: image,
           name: filename,
           type: `image/${ext === "jpg" ? "jpeg" : ext}`,
         });
       }
-      console.log("Sending gift create request...");
-      const response = await api.post("/gift/create", formData, {
+      await api.post("/gift/create", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log("Gift created:", response.data);
-      Alert.alert("Succes", "Cadeau ajouté !", [
+      Alert.alert("Succès", "Cadeau ajouté !", [
         { text: "OK", onPress: () => router.back() },
       ]);
     } catch (error) {
-      console.log("Gift create error:", error.message);
-      console.log("Error response:", error.response?.status, error.response?.data);
       if (error.response) {
         Alert.alert("Erreur", error.response.data.message || "Erreur");
       } else {
@@ -156,7 +150,7 @@ export default function AddGift() {
 
         <SubmitButton
           text="Ajouter le cadeau"
-          onPress={handleCreate}
+          onPress={handleSubmit}
           isSubmitting={isSubmitting}
         />
       </ScrollView>
