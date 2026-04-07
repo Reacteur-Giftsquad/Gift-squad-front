@@ -85,6 +85,7 @@ export default function EventDetail() {
   if (!event) return null;
 
   const isSecretSanta = event.type === "Secret Santa";
+  const isCreator = event.creator?._id === user._id;
   const isDrawn = event.status === "drawn";
   const myDraw = event.secret_Santa_Draw?.find(
     (d) => (d.giver?._id || d.giver) === user._id,
@@ -240,22 +241,26 @@ export default function EventDetail() {
               );
             })}
 
-          <Text style={styles.addLabel}>Ajouter un participant</Text>
-          <View style={styles.addRow}>
-            <TextInput
-              style={styles.addInput}
-              placeholder="Email du participant"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-            <TouchableOpacity
-              style={styles.addBtn}
-              onPress={handleAddParticipant}>
-              <MaterialIcons name="add" size={24} color="white" />
-            </TouchableOpacity>
-          </View>
+          {isCreator && (
+            <>
+              <Text style={styles.addLabel}>Ajouter un participant</Text>
+              <View style={styles.addRow}>
+                <TextInput
+                  style={styles.addInput}
+                  placeholder="Email du participant"
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+                <TouchableOpacity
+                  style={styles.addBtn}
+                  onPress={handleAddParticipant}>
+                  <MaterialIcons name="add" size={24} color="white" />
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
         </View>
 
         {isSecretSanta && (
@@ -264,7 +269,7 @@ export default function EventDetail() {
               <View style={styles.drawDoneBtn}>
                 <Text style={styles.drawDoneText}>Tirage au sort effectué</Text>
               </View>
-            ) : (
+            ) : isCreator ? (
               <>
                 <Text style={styles.warningText}>
                   <Text style={{ fontWeight: "bold" }}>Attention : </Text>
@@ -276,7 +281,7 @@ export default function EventDetail() {
                   onPress={() => setShowDrawModal(true)}
                 />
               </>
-            )}
+            ) : null}
           </View>
         )}
       </ScrollView>
