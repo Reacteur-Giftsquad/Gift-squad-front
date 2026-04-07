@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  FlatList,
 } from "react-native";
 import { useLocalSearchParams, useRouter, useFocusEffect } from "expo-router";
 import api from "../../utils/api";
@@ -16,6 +17,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import SubmitButton from "../../components/SubmitButton";
 import Title from "../../components/Title";
 import styles from "../../styles/giftListStyles";
+import GiftCard from "../../components/GiftCard";
 
 export default function GiftList() {
   const { eventId, eventName } = useLocalSearchParams();
@@ -49,7 +51,7 @@ export default function GiftList() {
   useFocusEffect(
     useCallback(() => {
       fetchData();
-    }, [])
+    }, []),
   );
 
   const totalGiftsPrice = gifts.reduce((sum, g) => sum + (g.price || 0), 0);
@@ -76,7 +78,7 @@ export default function GiftList() {
         <View style={{ width: 24 }} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <View style={styles.content}>
         <Title text={`Idées de cadeaux pour ${eventName || ""}`} heading="h1" />
         <Text style={styles.collectedText}>
           Montant total collecté :{" "}
@@ -84,73 +86,16 @@ export default function GiftList() {
           <Text style={{ fontWeight: "bold" }}>{totalGiftsPrice}€</Text>
         </Text>
 
-        {gifts.map((gift) => (
-          <View key={gift._id} style={styles.giftCard}>
-            {gift.image_url ? (
-              <Image
-                source={{ uri: gift.image_url }}
-                style={styles.giftImage}
-              />
-            ) : (
-              <View style={[styles.giftImage, styles.giftImagePlaceholder]}>
-                <MaterialIcons
-                  name="card-giftcard"
-                  size={40}
-                  color={colors.gray}
-                />
-              </View>
-            )}
-
-            <View style={styles.giftInfo}>
-              <Text style={styles.giftName}>{gift.name}</Text>
-              <Text style={styles.giftPrice}>{gift.price}€</Text>
-            </View>
-
-            {/* Icônes edit + delete */}
-            <View style={styles.giftActions}>
-              <TouchableOpacity
-                onPress={() =>
-                  router.push({
-                    pathname: "/(main)/editGift",
-                    params: {
-                      giftId: gift._id,
-                      giftName: gift.name,
-                      giftPrice: String(gift.price),
-                      giftLink: gift.link || "",
-                      giftImage: gift.image_url || "",
-                    },
-                  })
-                }>
-                <MaterialIcons name="edit" size={22} color={colors.gray} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() =>
-                  Alert.alert(
-                    "Supprimer",
-                    `Supprimer "${gift.name}" ?`,
-                    [
-                      { text: "Annuler", style: "cancel" },
-                      {
-                        text: "Supprimer",
-                        style: "destructive",
-                        onPress: async () => {
-                          try {
-                            await api.delete(`/gift/${gift._id}`);
-                            fetchData();
-                          } catch (error) {
-                            Alert.alert("Erreur", "Impossible de supprimer le cadeau");
-                          }
-                        },
-                      },
-                    ],
-                  )
-                }>
-                <MaterialIcons name="delete" size={22} color={colors.red} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
-
+        {/* changed from gifts.map => FlatList */}
+        <FlatList
+          data={gifts}
+          keyExtractor={(item) => String(item._id)}
+          showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+          renderItem={({ item }) => (
+            <GiftCard gift={item} fetchData={fetchData} />
+          )}
+        />
         <SubmitButton
           text="Ajouter un cadeau"
           icon={<MaterialIcons name="add" size={24} color="white" />}
@@ -161,7 +106,7 @@ export default function GiftList() {
             })
           }
         />
-      </ScrollView>
+      </View>
     </View>
   );
 }
