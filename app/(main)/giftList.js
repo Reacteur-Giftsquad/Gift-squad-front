@@ -33,11 +33,15 @@ export default function GiftList() {
       setGifts(data || []);
 
       try {
-        const contribRes = await api.get(`/contributions`, {
-          params: { eventId },
-        });
+        const contribRes = await api.get(`/contribution/event/${eventId}`);
         setContributions(contribRes.data || []);
-      } catch {}
+      } catch {
+        if (error.response) {
+          Alert.alert("Erreur", error.response.data.message || "Erreur");
+        } else {
+          Alert.alert("Erreur", "Impossible de charger les contributions");
+        }
+      }
     } catch (error) {
       if (error.response) {
         Alert.alert("Erreur", error.response.data.message || "Erreur");
@@ -59,6 +63,7 @@ export default function GiftList() {
     (sum, c) => sum + (c.amount || 0),
     0,
   );
+  console.log(contributions);
 
   if (isLoading) {
     return (
