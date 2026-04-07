@@ -63,6 +63,7 @@ export default function GiftList() {
     (sum, c) => sum + (c.amount || 0),
     0,
   );
+  console.log(contributions);
 
   if (isLoading) {
     return (
