@@ -43,24 +43,6 @@ export default function WishList() {
     }, []),
   );
 
-  const handleReserve = async (gift) => {
-    try {
-      await api.post(`/gift/${gift._id}/reserve`, { userId: user._id });
-      fetchData();
-    } catch (error) {
-      Alert.alert("Erreur", error.response?.data?.message || "Erreur serveur");
-    }
-  };
-
-  const handleUnreserve = async (gift) => {
-    try {
-      await api.post(`/gift/${gift._id}/unreserve`);
-      fetchData();
-    } catch (error) {
-      Alert.alert("Erreur", error.response?.data?.message || "Erreur serveur");
-    }
-  };
-
   const headerTitle = isMyList
     ? "Ma liste de souhaits"
     : `Liste de ${ownerName}`;
@@ -74,7 +56,8 @@ export default function WishList() {
   }
 
   const renderGift = ({ item: gift }) => {
-    const isReservedByMe = gift.assignedTo === user._id || gift.assignedTo?._id === user._id;
+    const isReservedByMe =
+      gift.assignedTo === user._id || gift.assignedTo?._id === user._id;
     const isReservedByOther = gift.isAssigned && !isReservedByMe;
 
     return (
@@ -93,32 +76,56 @@ export default function WishList() {
                 giftDescription: gift.descritption || "",
               },
             });
+          } else {
+            router.push({
+              pathname: "/(main)/giftDetails",
+              params: {
+                giftId: gift._id,
+                giftName: gift.name,
+                giftLink: gift.link || "",
+                giftImage: gift.image_url || "",
+                giftDescription: gift.descritption || "",
+                assignedTo: gift.assignedTo,
+              },
+            });
           }
         }}>
         <View style={cardStyles.card}>
           <View style={cardStyles.imageContainer}>
             {gift.image_url ? (
-              <Image source={{ uri: gift.image_url }} style={cardStyles.image} />
+              <Image
+                source={{ uri: gift.image_url }}
+                style={cardStyles.image}
+              />
             ) : (
               <View style={[cardStyles.image, cardStyles.placeholder]}>
-                <MaterialIcons name="card-giftcard" size={40} color={colors.gray} />
+                <MaterialIcons
+                  name="card-giftcard"
+                  size={40}
+                  color={colors.gray}
+                />
               </View>
             )}
             {!isMyList && isReservedByMe && (
-              <TouchableOpacity
-                style={cardStyles.overlay}
-                onPress={() => handleUnreserve(gift)}>
-                <Text style={cardStyles.overlayText}>
-                  Vous vous occupez de ce cadeau
+              <>
+                <View
+                  style={[
+                    cardStyles.reservedOverlay,
+                    cardStyles.reservedByUser,
+                  ]}></View>
+                <Text style={cardStyles.reservedText}>
+                  Vous vous occuppez de ce cadeau
                 </Text>
-              </TouchableOpacity>
+              </>
             )}
             {!isMyList && isReservedByOther && (
-              <View style={[cardStyles.overlay, { backgroundColor: "rgba(150,150,150,0.8)" }]}>
-                <Text style={cardStyles.overlayText}>
+              <>
+                <View
+                  style={[cardStyles.reservedOverlay, reservedByOthers]}></View>
+                <Text style={styles.reservedText}>
                   Quelqu'un s'occupe de ce cadeau
                 </Text>
-              </View>
+              </>
             )}
             {!isMyList && !gift.isAssigned && (
               <TouchableOpacity
@@ -220,5 +227,23 @@ const cardStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     textTransform: "uppercase",
+  },
+  reservedOverlay: {
+    width: "100%",
+    height: "100%",
+    opacity: 0.7,
+    position: "absolute",
+  },
+  reservedText: {
+    position: "absolute",
+    color: "white",
+    textAlign: "center",
+    paddingBlock: 10,
+  },
+  reservedByOthers: {
+    backgroundColor: "black",
+  },
+  reservedByUser: {
+    backgroundColor: colors.green,
   },
 });
