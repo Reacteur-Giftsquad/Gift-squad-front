@@ -85,6 +85,7 @@ export default function EventDetail() {
   if (!event) return null;
 
   const isSecretSanta = event.type === "Secret Santa";
+  const isChristmasList = event.type === "Liste de Noël";
   const isCreator = event.creator?._id === user._id;
   const isDrawn = event.status === "drawn";
   const myDraw = event.secret_Santa_Draw?.find(
@@ -150,7 +151,7 @@ export default function EventDetail() {
             <Text style={styles.dateText}>{convertDate(event.date)}</Text>
           </View>
 
-          {event.budget > 0 && (
+          {!isChristmasList && event.budget > 0 && (
             <View style={styles.budgetBar}>
               <Text style={styles.budgetAmount}>
                 {isSecretSanta
@@ -177,7 +178,7 @@ export default function EventDetail() {
             </View>
           )}
 
-          {!isSecretSanta && (
+          {!isSecretSanta && !isChristmasList && (
             <SubmitButton
               text="Liste de cadeaux"
               icon={<FontAwesome6 name="gift" size={20} color="white" />}
@@ -210,6 +211,31 @@ export default function EventDetail() {
                     {member.pseudo || member.firstname}
                     {isYou && <Text style={styles.youLabel}> (vous)</Text>}
                   </Text>
+                  {isChristmasList && (
+                    <TouchableOpacity
+                      style={styles.participateBtn}
+                      onPress={() =>
+                        router.push({
+                          pathname: "/(main)/wishList",
+                          params: {
+                            eventId: id,
+                            ownerId: member._id,
+                            ownerName: member.pseudo || member.firstname,
+                            isOwn: isYou ? "true" : "false",
+                          },
+                        })
+                      }>
+                      <FontAwesome6
+                        name="gift"
+                        size={14}
+                        color="white"
+                        style={{ marginRight: 6 }}
+                      />
+                      <Text style={styles.participateBtnText}>
+                        {isYou ? "Ma liste" : "Liste de souhaits"}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                   {isSecretSanta && isDrawn && !isYou && (
                     <MaterialIcons
                       name="visibility"
@@ -218,6 +244,7 @@ export default function EventDetail() {
                     />
                   )}
                   {!isSecretSanta &&
+                    !isChristmasList &&
                     (contribution ? (
                       <Text style={styles.contributionBadge}>
                         {contribution.amount}€

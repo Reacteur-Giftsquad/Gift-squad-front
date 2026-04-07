@@ -103,6 +103,8 @@ export default StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 12,
     paddingVertical: 6,
+    flexDirection: "row",
+    alignItems: "center",
   },
   participateBtnText: {
     color: "white",
