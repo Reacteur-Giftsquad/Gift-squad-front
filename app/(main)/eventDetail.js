@@ -44,7 +44,13 @@ export default function EventDetail() {
       try {
         const contribRes = await api.get(`/contribution/event/${id}`);
         setContributions(contribRes.data || []);
-      } catch {}
+      } catch {
+        if (error.response) {
+          Alert.alert("Erreur", error.response.data.message || "Erreur");
+        } else {
+          Alert.alert("Erreur", "Impossible de charger les contributions");
+        }
+      }
     } catch (error) {
       Alert.alert("Erreur", "Impossible de charger l'événement");
     }
