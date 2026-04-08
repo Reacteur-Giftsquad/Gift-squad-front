@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Alert,
   StyleSheet,
+  Linking,
 } from "react-native";
 import { useLocalSearchParams, useRouter, useFocusEffect } from "expo-router";
 import api from "../../utils/api";
@@ -17,6 +18,7 @@ import SubmitButton from "../../components/SubmitButton";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import Title from "../../components/Title";
 import Constants from "expo-constants";
+import Feather from "@expo/vector-icons/Feather";
 const navigationBar = Constants.statusBarHeight;
 
 export default function GiftDetails() {
@@ -76,7 +78,14 @@ export default function GiftDetails() {
         )}
         <Title text={`${giftName || ""}`} heading="h1" />
         <Text style={styles.giftDescription}>{giftDescription}</Text>
-        {giftLink && <SubmitButton text="Voir sur le site" />}
+
+        {giftLink && (
+          <SubmitButton
+            onPress={() => Linking.openURL(giftLink)}
+            text="Voir sur le site"
+            icon={<Feather name="external-link" size={24} color="white" />}
+          />
+        )}
         {isReservedByOther ? (
           <Text>Ce cadeau est déjà réservé</Text>
         ) : isReservedByMe ? (

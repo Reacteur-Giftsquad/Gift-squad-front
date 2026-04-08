@@ -92,7 +92,7 @@ export default function GiftList() {
           onPress={() =>
             router.push({
               pathname: "/(main)/addGift",
-              params: { eventId },
+              params: { eventId, mode: "gift" },
             })
           }
         />
