@@ -19,13 +19,21 @@ import Constants from "expo-constants";
 const navigationBar = Constants.statusBarHeight;
 
 export default function GiftDetails() {
-  const { giftId, giftName, giftDescription, giftLink, giftImage, assignedTo } =
-    useLocalSearchParams();
+  const {
+    giftId,
+    giftName,
+    giftDescription,
+    giftLink,
+    giftImage,
+    assignedTo,
+    isAssigned,
+  } = useLocalSearchParams();
   const [showReserveModal, setShowReserveModal] = useState(false);
   const { user } = useAuth();
   const router = useRouter();
   const isReservedByMe =
     assignedTo === user._id || assignedTo?._id === user._id;
+  const isReservedByOther = isAssigned && !isReservedByMe;
 
   const handleReserve = async () => {
     setShowReserveModal(false);
@@ -79,11 +87,12 @@ export default function GiftDetails() {
         <Title text={`${giftName || ""}`} heading="h1" />
         <Text style={styles.giftDescription}>{giftDescription}</Text>
         {giftLink && <SubmitButton text="Voir sur le site" />}
-
-        {isReservedByMe ? (
+        {isReservedByOther ? (
+          <Text>Ce cadeau est déjà réservé</Text>
+        ) : isReservedByMe ? (
           <SubmitButton
             bgColor={colors.red}
-            text="Unreserve"
+            text="Annuler la réservation"
             onPress={handleUnreserve}
           />
         ) : (
