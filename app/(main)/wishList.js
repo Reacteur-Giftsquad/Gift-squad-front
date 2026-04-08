@@ -121,8 +121,11 @@ export default function WishList() {
             {!isMyList && isReservedByOther && (
               <>
                 <View
-                  style={[cardStyles.reservedOverlay, reservedByOthers]}></View>
-                <Text style={styles.reservedText}>
+                  style={[
+                    cardStyles.reservedOverlay,
+                    cardStyles.reservedByOthers,
+                  ]}></View>
+                <Text style={cardStyles.reservedText}>
                   Quelqu'un s'occupe de ce cadeau
                 </Text>
               </>
