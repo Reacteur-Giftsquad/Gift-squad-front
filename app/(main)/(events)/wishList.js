@@ -3,14 +3,14 @@
 // If it's someone else's list, they can view and reserve wishes.
 
 import { useCallback, useState } from "react";
-import { View, Text, FlatList, TouchableOpacity, Alert } from "react-native";
+import { View, FlatList, Alert } from "react-native";
 import { useLocalSearchParams, useRouter, useFocusEffect } from "expo-router";
-import api from "../../utils/api";
+import api from "../../../utils/api";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import Loader from "../../components/Loader";
-import SubmitButton from "../../components/SubmitButton";
-import WishCard from "../../components/WishCard";
-import styles from "../../styles/giftListStyles";
+import Loader from "../../../components/Loader";
+import SubmitButton from "../../../components/SubmitButton";
+import WishCard from "../../../components/WishCard";
+import styles from "../../../styles/giftListStyles";
 
 export default function WishList() {
   const { eventId, ownerId, ownerName, isOwn } = useLocalSearchParams();
@@ -39,30 +39,16 @@ export default function WishList() {
     }, []),
   );
 
-  const headerTitle = isMyList
-    ? "Ma liste de souhaits"
-    : `Liste de ${ownerName}`;
-
   if (isLoading) return <Loader />;
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <MaterialIcons name="arrow-back" size={24} color="white" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>{headerTitle}</Text>
-        <View style={{ width: 24 }} />
-      </View>
-
       <FlatList
         data={gifts}
         keyExtractor={(item) => String(item._id)}
         contentContainerStyle={{ padding: 15, gap: 15, paddingBottom: 30 }}
         showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <WishCard gift={item} isMyList={isMyList} />
-        )}
+        renderItem={({ item }) => <WishCard gift={item} isMyList={isMyList} />}
         ListFooterComponent={
           isMyList ? (
             <SubmitButton

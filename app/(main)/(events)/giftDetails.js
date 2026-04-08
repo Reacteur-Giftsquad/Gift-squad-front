@@ -1,26 +1,18 @@
 // GiftDetails: detail view of a wish from someone else's list.
 // Users can reserve or unreserve a gift from this screen.
-
 import { useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  Alert,
-  Linking,
-} from "react-native";
+import { View, Text, Image, Alert, Linking } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import api from "../../utils/api";
-import showError from "../../utils/showError";
-import { useAuth } from "../../context/AuthContext";
-import colors from "../../assets/colors/colors.json";
+import api from "../../../utils/api";
+import showError from "../../../utils/showError";
+import { useAuth } from "../../../context/AuthContext";
+import colors from "../../../assets/colors/colors.json";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import SubmitButton from "../../components/SubmitButton";
-import ConfirmationModal from "../../components/ConfirmationModal";
-import Title from "../../components/Title";
+import SubmitButton from "../../../components/SubmitButton";
+import ConfirmationModal from "../../../components/ConfirmationModal";
+import Title from "../../../components/Title";
 import Feather from "@expo/vector-icons/Feather";
-import styles from "../../styles/giftDetailsStyles";
+import styles from "../../../styles/giftDetailsStyles";
 
 export default function GiftDetails() {
   const {
@@ -61,14 +53,6 @@ export default function GiftDetails() {
   };
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <MaterialIcons name="arrow-back" size={24} color="white" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Détail du cadeau</Text>
-        <View style={{ width: 24 }} />
-      </View>
-
       <View style={styles.content}>
         {giftImage ? (
           <Image source={{ uri: giftImage }} style={styles.giftImage} />

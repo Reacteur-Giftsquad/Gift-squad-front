@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from "expo-router";
-import EditGiftForm from "../../components/EditGiftForm";
+import EditGiftForm from "../../../components/EditGiftForm";
 
 export default function EditGift() {
   const {

@@ -2,18 +2,17 @@
 // Events can be deleted from this screen.
 
 import { Alert, FlatList, TouchableOpacity, View } from "react-native";
-import styles from "../../styles/globals";
+import styles from "../../../styles/globals";
 import { useEffect, useState } from "react";
-import api from "../../utils/api";
-import showError from "../../utils/showError";
-import { useAuth } from "../../context/AuthContext";
+import api from "../../../utils/api";
+import showError from "../../../utils/showError";
+import { useAuth } from "../../../context/AuthContext";
 import { useRouter } from "expo-router";
-import Loader from "../../components/Loader";
-import EventCard from "../../components/EventCard";
-import SubmitButton from "../../components/SubmitButton";
+import Loader from "../../../components/Loader";
+import EventCard from "../../../components/EventCard";
+import SubmitButton from "../../../components/SubmitButton";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-
-import ScreenWithMenu from "../../components/ScreenWithMenu";
+import ScreenWithMenu from "../../../components/ScreenWithMenu";
 
 export default function Events() {
   const router = useRouter();

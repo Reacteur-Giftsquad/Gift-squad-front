@@ -12,23 +12,6 @@ export default StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  header: {
-    backgroundColor: colors.green,
-    paddingTop: Constants.statusBarHeight + 10,
-    paddingBottom: 15,
-    paddingHorizontal: 15,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  headerTitle: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
-    textTransform: "uppercase",
-    textAlign: "center",
-    flex: 1,
-  },
   content: {
     padding: 15,
     gap: 15,
