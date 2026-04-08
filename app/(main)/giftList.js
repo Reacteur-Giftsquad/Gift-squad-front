@@ -1,18 +1,8 @@
 import { useCallback, useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  Alert,
-  FlatList,
-} from "react-native";
+import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import { useLocalSearchParams, useRouter, useFocusEffect } from "expo-router";
 import api from "../../utils/api";
 import showError from "../../utils/showError";
-import { useAuth } from "../../context/AuthContext";
-import colors from "../../assets/colors/colors.json";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Loader from "../../components/Loader";
 import SubmitButton from "../../components/SubmitButton";
@@ -22,33 +12,31 @@ import GiftCard from "../../components/GiftCard";
 
 export default function GiftList() {
   const { eventId, eventName } = useLocalSearchParams();
-  const { user } = useAuth();
   const router = useRouter();
   const [gifts, setGifts] = useState([]);
   const [contributions, setContributions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchData = async () => {
-    try {
-      const { data } = await api.get(`/gift/event/${eventId}`);
-      setGifts(data || []);
-
-      try {
-        const contribRes = await api.get(`/contribution/event/${eventId}`);
-        setContributions(contribRes.data || []);
-      } catch (e) {
-        showError(e, "Impossible de charger les contributions");
-      }
-    } catch (error) {
-      showError(error, "Impossible de charger les cadeaux");
-    }
-    setIsLoading(false);
-  };
-
   useFocusEffect(
     useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const { data } = await api.get(`/gift/event/${eventId}`);
+          setGifts(data || []);
+
+          try {
+            const contribRes = await api.get(`/contribution/event/${eventId}`);
+            setContributions(contribRes.data || []);
+          } catch (e) {
+            showError(e, "Impossible de charger les contributions");
+          }
+        } catch (error) {
+          showError(error, "Impossible de charger les cadeaux");
+        }
+        setIsLoading(false);
+      };
       fetchData();
-    }, []),
+    }, [eventId]),
   );
 
   const totalGiftsPrice = gifts.reduce((sum, g) => sum + (g.price || 0), 0);
@@ -82,9 +70,7 @@ export default function GiftList() {
           keyExtractor={(item) => String(item._id)}
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-          renderItem={({ item }) => (
-            <GiftCard gift={item} fetchData={fetchData} />
-          )}
+          renderItem={({ item }) => <GiftCard gift={item} />}
         />
         <SubmitButton
           text="Ajouter un cadeau"
