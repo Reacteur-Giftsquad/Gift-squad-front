@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { Platform } from "react-native";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
+import Constants from "expo-constants";
 import { useRouter } from "expo-router";
 import api from "./api";
 import { useAuth } from "../context/AuthContext";
@@ -50,7 +51,7 @@ export default function useNotifications() {
       }
 
       const { data: pushToken } = await Notifications.getExpoPushTokenAsync({
-        projectId: "gift-squad-front",
+        projectId: Constants.expoConfig?.extra?.eas?.projectId,
       });
 
       console.log("Push token:", pushToken);
