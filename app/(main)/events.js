@@ -1,19 +1,15 @@
-import {
-  ActivityIndicator,
-  Alert,
-  FlatList,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, FlatList, TouchableOpacity, View } from "react-native";
 import styles from "../../styles/globals";
 import { useEffect, useState } from "react";
 import api from "../../utils/api";
+import showError from "../../utils/showError";
 import { useAuth } from "../../context/AuthContext";
 import { useRouter } from "expo-router";
+import Loader from "../../components/Loader";
 import EventCard from "../../components/EventCard";
 import SubmitButton from "../../components/SubmitButton";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import colors from "../../assets/colors/colors.json";
+
 import ScreenWithMenu from "../../components/ScreenWithMenu";
 
 export default function Events() {
@@ -30,14 +26,7 @@ export default function Events() {
         });
         setData(response.data);
       } catch (error) {
-        if (error.response) {
-          Alert.alert(
-            "Erreur",
-            error.response.data.message || "Les événements pas trouvés",
-          );
-        } else {
-          Alert.alert("Erreur", "Impossible de se connecter au serveur");
-        }
+        showError(error, "Les événements pas trouvés");
       }
       setIsLoading(false);
     };
@@ -67,7 +56,7 @@ export default function Events() {
       }>
       <View style={styles.scrollContent}>
         {isLoading ? (
-          <ActivityIndicator size="large" color={colors.green} />
+          <Loader />
         ) : (
           <FlatList
             data={data}

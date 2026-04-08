@@ -6,17 +6,18 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
-  TextInput,
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
 import { useRouter } from "expo-router";
-import * as ImagePicker from "expo-image-picker";
 import api from "../utils/api";
+import showError from "../utils/showError";
+import useImagePicker from "../utils/useImagePicker";
 import Input from "./Input";
 import SubmitButton from "./SubmitButton";
 import Title from "./Title";
 import FilledIcon from "./FilledIcon";
+import TextArea from "./TextArea";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import colors from "../assets/colors/colors.json";
 import s from "../styles/addGiftStyles";
@@ -25,37 +26,13 @@ export default function AddGiftForm({ eventId, ownerId, mode = "gift" }) {
   const router = useRouter();
   const isWish = mode === "wish";
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [image, setImage] = useState(null);
+  const { image, pickFromCamera, pickFromGallery, clearImage } = useImagePicker();
   const [form, setForm] = useState({
     name: "",
     price: "",
     link: "",
     description: "",
   });
-
-  const pickFromCamera = async () => {
-    const { status } = await ImagePicker.requestCameraPermissionsAsync();
-    if (status !== "granted") {
-      return Alert.alert("Permission refusée", "L'accès à la caméra est nécessaire");
-    }
-    const result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      quality: 0.7,
-    });
-    if (!result.canceled) setImage(result.assets[0].uri);
-  };
-
-  const pickFromGallery = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      return Alert.alert("Permission refusée", "L'accès à la galerie est nécessaire");
-    }
-    const result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      quality: 0.7,
-    });
-    if (!result.canceled) setImage(result.assets[0].uri);
-  };
 
   const handleSubmit = async () => {
     if (isWish && !form.name) {
@@ -94,11 +71,7 @@ export default function AddGiftForm({ eventId, ownerId, mode = "gift" }) {
         { text: "OK", onPress: () => router.back() },
       ]);
     } catch (error) {
-      if (error.response) {
-        Alert.alert("Erreur", error.response.data.message || "Erreur");
-      } else {
-        Alert.alert("Erreur", "Impossible de se connecter au serveur");
-      }
+      showError(error);
     }
     setIsSubmitting(false);
   };
@@ -157,7 +130,7 @@ export default function AddGiftForm({ eventId, ownerId, mode = "gift" }) {
             <MaterialIcons name="photo-library" size={30} color="white" />
           </FilledIcon>
           {image && (
-            <FilledIcon onPress={() => setImage(null)} red>
+            <FilledIcon onPress={clearImage} red>
               <MaterialIcons name="delete" size={30} color="white" />
             </FilledIcon>
           )}
@@ -184,24 +157,12 @@ export default function AddGiftForm({ eventId, ownerId, mode = "gift" }) {
         )}
 
         {isWish && (
-          <>
-            <Text style={s.label}>Description (optionnelle)</Text>
-            <TextInput
-              style={{
-                borderWidth: 1,
-                borderColor: "#d1d1d1",
-                borderRadius: 8,
-                padding: 12,
-                fontSize: 14,
-                minHeight: 80,
-                textAlignVertical: "top",
-              }}
-              placeholder="Description du souhait"
-              multiline
-              value={form.description}
-              onChangeText={(v) => setForm({ ...form, description: v })}
-            />
-          </>
+          <TextArea
+            title="Description (optionnelle)"
+            placeholder="Description du souhait"
+            value={form.description}
+            onChangeText={(v) => setForm({ ...form, description: v })}
+          />
         )}
 
         <SubmitButton

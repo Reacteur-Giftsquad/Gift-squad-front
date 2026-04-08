@@ -2,7 +2,6 @@ import { useCallback, useState } from "react";
 import {
   View,
   Text,
-  ActivityIndicator,
   FlatList,
   Image,
   TouchableOpacity,
@@ -13,6 +12,7 @@ import api from "../../utils/api";
 import { useAuth } from "../../context/AuthContext";
 import colors from "../../assets/colors/colors.json";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import Loader from "../../components/Loader";
 import SubmitButton from "../../components/SubmitButton";
 import styles from "../../styles/giftListStyles";
 
@@ -47,13 +47,7 @@ export default function WishList() {
     ? "Ma liste de souhaits"
     : `Liste de ${ownerName}`;
 
-  if (isLoading) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
-      </View>
-    );
-  }
+  if (isLoading) return <Loader />;
 
   const renderGift = ({ item: gift }) => {
     const isReservedByMe =

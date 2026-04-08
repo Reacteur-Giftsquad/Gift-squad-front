@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import { useRouter } from "expo-router";
+import showError from "../../utils/showError";
 import styles from "../../styles/globals";
 import api from "../../utils/api";
 import Header from "../../components/Header";
@@ -49,14 +50,7 @@ export default function SignupScreen() {
       await login(data.token, data.user);
       router.replace("/(main)/dashboard");
     } catch (error) {
-      if (error.response) {
-        Alert.alert(
-          "Erreur",
-          error.response.data.message || "Erreur lors de la creation du compte",
-        );
-      } else {
-        Alert.alert("Erreur", "Impossible de se connecter au serveur");
-      }
+      showError(error, "Erreur lors de la creation du compte");
     }
   };
 
