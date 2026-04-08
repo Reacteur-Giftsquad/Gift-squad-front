@@ -65,6 +65,8 @@ const Input = ({ title, type, placeholder, setState, value }) => {
             <DateTimePicker
               value={date}
               mode="date"
+              minimumDate={new Date()}
+              firstDayOfWeek={1}
               display={Platform.OS === "ios" ? "spinner" : "default"}
               onChange={onDateChange}
             />
