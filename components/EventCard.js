@@ -63,8 +63,8 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   title: {
-    textTransform: "uppercase",
-    fontSize: 20,
+    fontSize: 16,
+    fontWeight: "bold",
   },
   eventData: {
     flexDirection: "column",
