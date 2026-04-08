@@ -1,3 +1,6 @@
+// Profil: user profile screen with editable fields (name, pseudo, email).
+// Also provides a logout button.
+
 import { useState } from "react";
 import {
   Alert,

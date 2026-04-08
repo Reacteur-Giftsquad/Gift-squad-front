@@ -1,3 +1,7 @@
+// EditGiftForm: form to edit or delete an existing gift/wish.
+// Same layout as AddGiftForm but pre-filled with initial values.
+// Includes a delete button with confirmation alert.
+
 import { useState } from "react";
 import {
   View,
@@ -42,6 +46,7 @@ export default function EditGiftForm({
     description: initialDescription,
   });
 
+  // Show confirmation alert then delete via API
   const handleDelete = () => {
     const label = isWish ? "ce souhait" : "ce cadeau";
     Alert.alert(`Supprimer ${label}`, "Cette action est irréversible.", [
@@ -64,6 +69,7 @@ export default function EditGiftForm({
     ]);
   };
 
+  // Validate, build FormData, and PUT to /gift/modify/:id
   const handleSubmit = async () => {
     if (isWish && !form.name) {
       return Alert.alert("Erreur", "Le nom est obligatoire");

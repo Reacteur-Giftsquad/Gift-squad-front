@@ -1,3 +1,7 @@
+// AddGiftForm: form to create a new gift or wish.
+// mode="gift" -> gift with name + price (for birthday events)
+// mode="wish" -> wish with name + description (for christmas lists)
+
 import { useState } from "react";
 import {
   View,
@@ -34,6 +38,7 @@ export default function AddGiftForm({ eventId, ownerId, mode = "gift" }) {
     description: "",
   });
 
+  // Validate, build FormData (with optional image), and POST to /gift/create
   const handleSubmit = async () => {
     if (isWish && !form.name) {
       return Alert.alert("Erreur", "Le nom est obligatoire");
@@ -53,6 +58,7 @@ export default function AddGiftForm({ eventId, ownerId, mode = "gift" }) {
         formData.append("owner", ownerId);
         formData.append("descritption", form.description);
       }
+      // Attach the picked image in the format React Native expects for multipart upload
       if (image) {
         const filename = image.split("/").pop();
         const ext = filename.split(".").pop();
@@ -76,6 +82,7 @@ export default function AddGiftForm({ eventId, ownerId, mode = "gift" }) {
     setIsSubmitting(false);
   };
 
+  // Dynamic labels based on gift vs wish mode
   const label = isWish ? "souhait" : "cadeau";
   const headerTitle = isWish ? "Ajouter un souhait" : "Ajouter un cadeau";
   const title = isWish ? "NOUVEAU SOUHAIT" : "AJOUTER UN CADEAU";

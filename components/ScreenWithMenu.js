@@ -1,3 +1,7 @@
+// ScreenWithMenu: layout wrapper that adds a top header bar and a sliding side menu.
+// Used by most main screens (dashboard, events, invitations, profile).
+// The menu slides in from the left with a fade overlay.
+
 import { useState, useRef, useEffect } from "react";
 import {
   View,
@@ -22,6 +26,7 @@ export default function ScreenWithMenu({ title, children, rightIcon }) {
   const slideAnim = useRef(new Animated.Value(-300)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
+  // Animate menu slide-in / slide-out when toggled
   useEffect(() => {
     if (menuOpen) {
       Animated.parallel([

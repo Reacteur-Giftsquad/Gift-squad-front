@@ -1,3 +1,6 @@
+// Events: lists all events the user is part of (as creator or participant).
+// Events can be deleted from this screen.
+
 import { Alert, FlatList, TouchableOpacity, View } from "react-native";
 import styles from "../../styles/globals";
 import { useEffect, useState } from "react";

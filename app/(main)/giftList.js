@@ -1,3 +1,6 @@
+// GiftList: displays the list of gifts for a birthday event.
+// Shows total collected vs total gift prices, with option to add new gifts.
+
 import { useCallback, useState } from "react";
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import { useLocalSearchParams, useRouter, useFocusEffect } from "expo-router";

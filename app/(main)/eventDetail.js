@@ -1,3 +1,10 @@
+// EventDetail: shows full details of an event.
+// Adapts UI based on event type:
+//   - Secret Santa: shows draw button (creator only) and draw results
+//   - Birthday: shows gift list + contribution system
+//   - Christmas List: shows each participant's wish list
+// Creator can invite participants by email.
+
 import { useEffect, useState } from "react";
 import {
   View,
@@ -78,19 +85,23 @@ export default function EventDetail() {
 
   if (!event) return null;
 
+  // Determine event type and user's role to adapt the UI
   const isSecretSanta = event.type === "Secret Santa";
   const isChristmasList = event.type === "Liste de Noël";
   const isCreator = event.creator?._id === user._id;
   const isDrawn = event.status === "drawn";
+  // Find who the current user drew in a Secret Santa
   const myDraw = event.secret_Santa_Draw?.find(
     (d) => (d.giver?._id || d.giver) === user._id,
   );
+  // Birthday contribution totals
   const totalCollected = contributions.reduce(
     (sum, c) => sum + (c.amount || 0),
     0,
   );
   const participatingCount = contributions.length;
 
+  // Trigger the Secret Santa random draw (irreversible)
   const handleConfirmDraw = async () => {
     setShowDrawModal(false);
     try {
@@ -102,6 +113,7 @@ export default function EventDetail() {
     }
   };
 
+  // Submit a monetary contribution for a birthday event
   const handleContribute = async () => {
     const amount = Number(contribAmount);
     if (!amount || amount <= 0) {

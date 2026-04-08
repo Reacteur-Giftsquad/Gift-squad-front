@@ -1,3 +1,4 @@
+// Auth API helpers: login and signup requests.
 import api from "./api";
 
 export const loginUser = async (email, password) => {

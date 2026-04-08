@@ -1,3 +1,6 @@
+// ConfirmationModal: reusable modal with confirm/cancel buttons.
+// Pass children as the modal body content.
+
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import colors from "../assets/colors/colors.json";

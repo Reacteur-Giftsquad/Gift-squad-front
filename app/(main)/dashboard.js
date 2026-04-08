@@ -1,3 +1,6 @@
+// Dashboard: main home screen after login.
+// Shows welcome message and activity cards (Secret Santa, Birthday, Christmas List).
+
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
@@ -6,6 +9,7 @@ import ScreenWithMenu from "../../components/ScreenWithMenu";
 import styles from "../../styles/dashboardStyles";
 import colors from "../../assets/colors/colors.json";
 
+// Available event types shown on the dashboard
 const ACTIVITIES = [
   {
     type: "secretSanta",

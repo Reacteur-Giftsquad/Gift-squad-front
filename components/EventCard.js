@@ -1,3 +1,6 @@
+// EventCard: displays an event in the events list.
+// Tap to navigate to event detail, long-press to delete.
+
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
