@@ -21,7 +21,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.prodigy75.Giftsquadfront"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -29,6 +30,13 @@
     "plugins": [
       "expo-router",
       "@react-native-community/datetimepicker"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "570bbb3f-9063-4c56-b828-b2464dacfbc5"
+      }
+    },
+    "owner": "prodigy75"
   }
 }
