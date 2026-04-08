@@ -274,7 +274,7 @@ export default function EventDetail() {
               );
             })}
 
-          {isCreator && (
+          {isCreator && !isDrawn && (
             <>
               <Text style={styles.addLabel}>Ajouter un participant</Text>
               <View style={styles.addRow}>

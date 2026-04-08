@@ -105,8 +105,11 @@ export default function EditGiftForm({
     try {
       const formData = new FormData();
       formData.append("name", form.name);
-      formData.append("price", Number(form.price));
+      formData.append("price", isWish ? 0 : Number(form.price));
       formData.append("link", form.link);
+      if (isWish) {
+        formData.append("description", form.description);
+      }
       if (image) {
         const filename = image.split("/").pop();
         const ext = filename.split(".").pop();
@@ -116,9 +119,6 @@ export default function EditGiftForm({
           type: `image/${ext === "jpg" ? "jpeg" : ext}`,
         });
       }
-
-      if (isWish) formData.append("description", form.description);
-
       await api.put(`/gift/modify/${giftId}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
