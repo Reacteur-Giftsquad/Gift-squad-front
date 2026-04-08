@@ -1,19 +1,11 @@
 import { useEffect, useRef } from "react";
 import { Platform } from "react-native";
-import * as Notifications from "expo-notifications";
-import * as Device from "expo-device";
 import Constants from "expo-constants";
 import { useRouter } from "expo-router";
 import api from "./api";
 import { useAuth } from "../context/AuthContext";
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
-});
+const isExpoGo = Constants.executionEnvironment === "expoGo";
 
 export default function useNotifications() {
   const { user } = useAuth();
@@ -21,9 +13,23 @@ export default function useNotifications() {
   const responseListener = useRef();
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || isExpoGo) return;
+
+    let Notifications;
+    let Device;
 
     const registerPushToken = async () => {
+      Notifications = require("expo-notifications");
+      Device = require("expo-device");
+
+      Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+          shouldShowAlert: true,
+          shouldPlaySound: true,
+          shouldSetBadge: false,
+        }),
+      });
+
       if (!Device.isDevice) {
         console.log("Push notifications require a physical device");
         return;
@@ -65,14 +71,20 @@ export default function useNotifications() {
 
     registerPushToken();
 
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener(() => {
-        router.push("/(main)/invitations");
-      });
+    // Lazy load for tap listener
+    const setupListener = async () => {
+      if (!Notifications) Notifications = require("expo-notifications");
+      responseListener.current =
+        Notifications.addNotificationResponseReceivedListener(() => {
+          router.push("/(main)/invitations");
+        });
+    };
+    setupListener();
 
     return () => {
       if (responseListener.current) {
-        Notifications.removeNotificationSubscription(responseListener.current);
+        const N = require("expo-notifications");
+        N.removeNotificationSubscription(responseListener.current);
       }
     };
   }, [user]);
