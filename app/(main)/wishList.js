@@ -169,8 +169,8 @@ export default function WishList() {
               icon={<MaterialIcons name="add" size={24} color="white" />}
               onPress={() =>
                 router.push({
-                  pathname: "/(main)/addWish",
-                  params: { eventId, ownerId },
+                  pathname: "/(main)/addGift",
+                  params: { eventId, ownerId, mode: "wish" },
                 })
               }
             />
