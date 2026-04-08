@@ -30,7 +30,8 @@ export default function AddGiftForm({ eventId, ownerId, mode = "gift" }) {
   const router = useRouter();
   const isWish = mode === "wish";
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { image, pickFromCamera, pickFromGallery, clearImage } = useImagePicker();
+  const { image, pickFromCamera, pickFromGallery, clearImage } =
+    useImagePicker();
   const [form, setForm] = useState({
     name: "",
     price: "",
@@ -84,27 +85,20 @@ export default function AddGiftForm({ eventId, ownerId, mode = "gift" }) {
 
   // Dynamic labels based on gift vs wish mode
   const label = isWish ? "souhait" : "cadeau";
-  const headerTitle = isWish ? "Ajouter un souhait" : "Ajouter un cadeau";
   const title = isWish ? "NOUVEAU SOUHAIT" : "AJOUTER UN CADEAU";
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={s.container}>
-      <View style={s.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <MaterialIcons name="arrow-back" size={24} color="white" />
-        </TouchableOpacity>
-        <Text style={s.headerTitle}>{headerTitle}</Text>
-        <View style={{ width: 24 }} />
-      </View>
-
       <ScrollView contentContainerStyle={s.content}>
         <Title text={title} heading="h1" />
 
         <Input
           title="Nom"
-          placeholder={isWish ? "Nom du souhait" : "Ex: Livre - Le Seigneur des Anneaux"}
+          placeholder={
+            isWish ? "Nom du souhait" : "Ex: Livre - Le Seigneur des Anneaux"
+          }
           setState={(v) => setForm({ ...form, name: v })}
           value={form.name}
         />
@@ -114,7 +108,9 @@ export default function AddGiftForm({ eventId, ownerId, mode = "gift" }) {
             title="Prix (€)"
             placeholder="Ex: 25"
             type="price"
-            setState={(v) => setForm({ ...form, price: v.replace(/[^0-9]/g, "") })}
+            setState={(v) =>
+              setForm({ ...form, price: v.replace(/[^0-9]/g, "") })
+            }
             value={form.price}
           />
         )}

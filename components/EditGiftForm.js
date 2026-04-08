@@ -9,7 +9,6 @@ import {
   Alert,
   ScrollView,
   Image,
-  TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
@@ -38,7 +37,9 @@ export default function EditGiftForm({
   const router = useRouter();
   const isWish = mode === "wish";
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { image, pickFromCamera, pickFromGallery, clearImage } = useImagePicker(initialImage || null);
+  const { image, pickFromCamera, pickFromGallery, clearImage } = useImagePicker(
+    initialImage || null,
+  );
   const [form, setForm] = useState({
     name: initialName,
     price: initialPrice,
@@ -111,21 +112,12 @@ export default function EditGiftForm({
   };
 
   const label = isWish ? "souhait" : "cadeau";
-  const headerTitle = isWish ? "Modifier mon souhait" : "Modifier un cadeau";
   const title = isWish ? "MODIFIER LE SOUHAIT" : "MODIFIER UN CADEAU";
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={s.container}>
-      <View style={s.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <MaterialIcons name="arrow-back" size={24} color="white" />
-        </TouchableOpacity>
-        <Text style={s.headerTitle}>{headerTitle}</Text>
-        <View style={{ width: 24 }} />
-      </View>
-
       <ScrollView contentContainerStyle={s.content}>
         <Title text={title} heading="h1" />
 

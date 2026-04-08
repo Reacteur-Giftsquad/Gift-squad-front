@@ -8,23 +8,6 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  header: {
-    backgroundColor: colors.green,
-    paddingTop: Constants.statusBarHeight + 10,
-    paddingBottom: 15,
-    paddingHorizontal: 15,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  headerTitle: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
-    textTransform: "uppercase",
-    textAlign: "center",
-    flex: 1,
-  },
   content: {
     padding: 20,
     gap: 15,
@@ -39,11 +22,6 @@ export default StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     gap: 15,
-  },
-  imageBtn: {
-    backgroundColor: colors.green,
-    borderRadius: 10,
-    padding: 15,
   },
   imagePreview: {
     borderWidth: 2,

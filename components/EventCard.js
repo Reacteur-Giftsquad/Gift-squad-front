@@ -28,7 +28,7 @@ export default function EventCard({ event, onDelete }) {
       onPress={() =>
         router.push({
           pathname: "/(main)/eventDetail",
-          params: { id: event._id },
+          params: { id: event._id, title: event.name },
         })
       }
       onLongPress={handleLongPress}>

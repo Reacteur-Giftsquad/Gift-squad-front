@@ -2,16 +2,16 @@
 // Shows total collected vs total gift prices, with option to add new gifts.
 
 import { useCallback, useState } from "react";
-import { View, Text, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import { useLocalSearchParams, useRouter, useFocusEffect } from "expo-router";
-import api from "../../utils/api";
-import showError from "../../utils/showError";
+import api from "../../../utils/api";
+import showError from "../../../utils/showError";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import Loader from "../../components/Loader";
-import SubmitButton from "../../components/SubmitButton";
-import Title from "../../components/Title";
-import styles from "../../styles/giftListStyles";
-import GiftCard from "../../components/GiftCard";
+import Loader from "../../../components/Loader";
+import SubmitButton from "../../../components/SubmitButton";
+import Title from "../../../components/Title";
+import styles from "../../../styles/giftListStyles";
+import GiftCard from "../../../components/GiftCard";
 
 export default function GiftList() {
   const { eventId, eventName } = useLocalSearchParams();
@@ -52,14 +52,6 @@ export default function GiftList() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <MaterialIcons name="arrow-back" size={24} color="white" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Liste de cadeaux</Text>
-        <View style={{ width: 24 }} />
-      </View>
-
       <View style={styles.content}>
         <Title text={`Idées de cadeaux pour ${eventName || ""}`} heading="h1" />
         <Text style={styles.collectedText}>

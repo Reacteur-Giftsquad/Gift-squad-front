@@ -18,19 +18,19 @@ import {
   Platform,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import api from "../../utils/api";
-import showError from "../../utils/showError";
-import { useAuth } from "../../context/AuthContext";
-import colors from "../../assets/colors/colors.json";
-import convertDate from "../../utils/convertDate";
+import api from "../../../utils/api";
+import showError from "../../../utils/showError";
+import { useAuth } from "../../../context/AuthContext";
+import colors from "../../../assets/colors/colors.json";
+import convertDate from "../../../utils/convertDate";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import Loader from "../../components/Loader";
-import SubmitButton from "../../components/SubmitButton";
-import Title from "../../components/Title";
-import ConfirmationModal from "../../components/ConfirmationModal";
-import styles from "../../styles/eventDetailStyles";
-import { useBehavior } from "../../utils/useBehavior";
+import Loader from "../../../components/Loader";
+import SubmitButton from "../../../components/SubmitButton";
+import Title from "../../../components/Title";
+import ConfirmationModal from "../../../components/ConfirmationModal";
+import styles from "../../../styles/eventDetailStyles";
+import { useBehavior } from "../../../utils/useBehavior";
 
 export default function EventDetail() {
   const { id } = useLocalSearchParams();
@@ -138,14 +138,6 @@ export default function EventDetail() {
       behavior={behaviour}
       enabled={Platform.OS === "android"}
       style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <MaterialIcons name="arrow-back" size={24} color="white" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>{event.name}</Text>
-        <View style={{ width: 24 }} />
-      </View>
-
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.topSection}>
           <View style={styles.dateBar}>
