@@ -86,6 +86,7 @@ export default function WishList() {
                 giftImage: gift.image_url || "",
                 giftDescription: gift.descritption || "",
                 assignedTo: gift.assignedTo,
+                isAssigned: gift.isAssigned,
               },
             });
           }
