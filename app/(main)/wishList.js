@@ -73,7 +73,7 @@ export default function WishList() {
                 giftPrice: String(gift.price || ""),
                 giftLink: gift.link || "",
                 giftImage: gift.image_url || "",
-                giftDescription: gift.descritption || "",
+                giftDescription: gift.description || "",
               },
             });
           } else {

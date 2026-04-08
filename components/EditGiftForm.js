@@ -44,7 +44,10 @@ export default function EditGiftForm({
   const pickFromCamera = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== "granted") {
-      return Alert.alert("Permission refusée", "L'accès à la caméra est nécessaire");
+      return Alert.alert(
+        "Permission refusée",
+        "L'accès à la caméra est nécessaire",
+      );
     }
     const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
@@ -56,7 +59,10 @@ export default function EditGiftForm({
   const pickFromGallery = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      return Alert.alert("Permission refusée", "L'accès à la galerie est nécessaire");
+      return Alert.alert(
+        "Permission refusée",
+        "L'accès à la galerie est nécessaire",
+      );
     }
     const result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
@@ -77,7 +83,10 @@ export default function EditGiftForm({
             await api.delete(`/gift/${giftId}`);
             router.back();
           } catch (error) {
-            Alert.alert("Erreur", error.response?.data?.message || "Erreur serveur");
+            Alert.alert(
+              "Erreur",
+              error.response?.data?.message || "Erreur serveur",
+            );
           }
         },
       },
@@ -94,30 +103,25 @@ export default function EditGiftForm({
 
     setIsSubmitting(true);
     try {
-      if (isWish) {
-        await api.put(`/gift/modify/${giftId}`, {
-          name: form.name,
-          link: form.link,
-          descritption: form.description,
-        });
-      } else {
-        const formData = new FormData();
-        formData.append("name", form.name);
-        formData.append("price", Number(form.price));
-        formData.append("link", form.link);
-        if (image) {
-          const filename = image.split("/").pop();
-          const ext = filename.split(".").pop();
-          formData.append("image", {
-            uri: image,
-            name: filename,
-            type: `image/${ext === "jpg" ? "jpeg" : ext}`,
-          });
-        }
-        await api.put(`/gift/modify/${giftId}`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
+      const formData = new FormData();
+      formData.append("name", form.name);
+      formData.append("price", Number(form.price));
+      formData.append("link", form.link);
+      if (image) {
+        const filename = image.split("/").pop();
+        const ext = filename.split(".").pop();
+        formData.append("image", {
+          uri: image,
+          name: filename,
+          type: `image/${ext === "jpg" ? "jpeg" : ext}`,
         });
       }
+
+      if (isWish) formData.append("description", form.description);
+
+      await api.put(`/gift/modify/${giftId}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       const successMsg = isWish ? "Souhait modifié !" : "Cadeau modifié !";
       Alert.alert("Succès", successMsg, [
@@ -154,7 +158,9 @@ export default function EditGiftForm({
 
         <Input
           title="Nom"
-          placeholder={isWish ? "Nom du souhait" : "Ex: Livre - Le Seigneur des Anneaux"}
+          placeholder={
+            isWish ? "Nom du souhait" : "Ex: Livre - Le Seigneur des Anneaux"
+          }
           setState={(v) => setForm({ ...form, name: v })}
           value={form.name}
         />
@@ -164,14 +170,20 @@ export default function EditGiftForm({
             title="Prix (€)"
             placeholder="Ex: 25"
             type="price"
-            setState={(v) => setForm({ ...form, price: v.replace(/[^0-9]/g, "") })}
+            setState={(v) =>
+              setForm({ ...form, price: v.replace(/[^0-9]/g, "") })
+            }
             value={form.price}
           />
         )}
 
         <Input
-          title={isWish ? "Lien (optionnel)" : "Lien vers le produit (optionnel)"}
-          placeholder={isWish ? "Lien vers le produit" : "https://example.com/produit"}
+          title={
+            isWish ? "Lien (optionnel)" : "Lien vers le produit (optionnel)"
+          }
+          placeholder={
+            isWish ? "Lien vers le produit" : "https://example.com/produit"
+          }
           setState={(v) => setForm({ ...form, link: v })}
           value={form.link}
         />
