@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Alert, ScrollView } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import api from "../../../utils/api";
+import showError from "../../../utils/showError";
 import { useAuth } from "../../../context/AuthContext";
 import styles from "../../../styles/globals";
 import Input from "../../../components/Input";
@@ -45,14 +46,7 @@ export default function CreateEvent() {
         { text: "OK", onPress: () => router.replace("/(main)/events") },
       ]);
     } catch (error) {
-      if (error.response) {
-        Alert.alert(
-          "Erreur",
-          error.response.data.message || "Erreur lors de la création",
-        );
-      } else {
-        Alert.alert("Erreur", "Impossible de se connecter au serveur");
-      }
+      showError(error, "Erreur lors de la création");
     }
     setIsSubmitting(false);
   };

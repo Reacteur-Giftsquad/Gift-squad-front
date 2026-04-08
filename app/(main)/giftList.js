@@ -2,7 +2,6 @@ import { useCallback, useState } from "react";
 import {
   View,
   Text,
-  ActivityIndicator,
   ScrollView,
   Image,
   TouchableOpacity,
@@ -11,9 +10,11 @@ import {
 } from "react-native";
 import { useLocalSearchParams, useRouter, useFocusEffect } from "expo-router";
 import api from "../../utils/api";
+import showError from "../../utils/showError";
 import { useAuth } from "../../context/AuthContext";
 import colors from "../../assets/colors/colors.json";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import Loader from "../../components/Loader";
 import SubmitButton from "../../components/SubmitButton";
 import Title from "../../components/Title";
 import styles from "../../styles/giftListStyles";
@@ -35,19 +36,11 @@ export default function GiftList() {
       try {
         const contribRes = await api.get(`/contribution/event/${eventId}`);
         setContributions(contribRes.data || []);
-      } catch {
-        if (error.response) {
-          Alert.alert("Erreur", error.response.data.message || "Erreur");
-        } else {
-          Alert.alert("Erreur", "Impossible de charger les contributions");
-        }
+      } catch (e) {
+        showError(e, "Impossible de charger les contributions");
       }
     } catch (error) {
-      if (error.response) {
-        Alert.alert("Erreur", error.response.data.message || "Erreur");
-      } else {
-        Alert.alert("Erreur", "Impossible de charger les cadeaux");
-      }
+      showError(error, "Impossible de charger les cadeaux");
     }
     setIsLoading(false);
   };
@@ -64,13 +57,7 @@ export default function GiftList() {
     0,
   );
 
-  if (isLoading) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
-      </View>
-    );
-  }
+  if (isLoading) return <Loader />;
 
   return (
     <View style={styles.container}>

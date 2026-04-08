@@ -7,6 +7,7 @@ import {
   View,
 } from "react-native";
 import api from "../../utils/api";
+import showError from "../../utils/showError";
 import Octicons from "@expo/vector-icons/Octicons";
 import colors from "../../assets/colors/colors.json";
 import { useAuth } from "../../context/AuthContext";
@@ -47,15 +48,7 @@ export default function Profil() {
       await updateUser({ ...user, ...data });
       Alert.alert("Succes", "Profil mis a jour");
     } catch (error) {
-      if (error.response) {
-        Alert.alert(
-          "Erreur",
-          error.response.data.message ||
-            "Erreur lors de la modification du compte",
-        );
-      } else {
-        Alert.alert("Erreur", "Impossible de se connecter au serveur");
-      }
+      showError(error, "Erreur lors de la modification du compte");
     }
     setIsSubmitting(false);
   };

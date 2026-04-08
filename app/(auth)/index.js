@@ -6,6 +6,7 @@ import styles from "../../styles/globals";
 import Header from "../../components/Header";
 import Input from "../../components/Input";
 import api from "../../utils/api";
+import showError from "../../utils/showError";
 import SubmitButton from "../../components/SubmitButton";
 import LinkButton from "../../components/LinkButton";
 import colors from "../../assets/colors/colors.json";
@@ -27,14 +28,7 @@ export default function LoginScreen() {
       await login(data.token, data.user);
       router.replace("/(main)/dashboard");
     } catch (error) {
-      if (error.response) {
-        Alert.alert(
-          "Erreur",
-          error.response.data.message || "Email ou mot de passe incorrect",
-        );
-      } else {
-        Alert.alert("Erreur", "Impossible de se connecter au serveur");
-      }
+      showError(error, "Email ou mot de passe incorrect");
     }
   };
 

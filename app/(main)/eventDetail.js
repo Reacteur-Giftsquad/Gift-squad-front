@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   View,
   Text,
-  ActivityIndicator,
   ScrollView,
   TextInput,
   TouchableOpacity,
@@ -13,13 +12,16 @@ import {
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import api from "../../utils/api";
+import showError from "../../utils/showError";
 import { useAuth } from "../../context/AuthContext";
 import colors from "../../assets/colors/colors.json";
 import convertDate from "../../utils/convertDate";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import Loader from "../../components/Loader";
 import SubmitButton from "../../components/SubmitButton";
 import Title from "../../components/Title";
+import ConfirmationModal from "../../components/ConfirmationModal";
 import styles from "../../styles/eventDetailStyles";
 import { useBehavior } from "../../utils/useBehavior";
 
@@ -44,12 +46,8 @@ export default function EventDetail() {
       try {
         const contribRes = await api.get(`/contribution/event/${id}`);
         setContributions(contribRes.data || []);
-      } catch {
-        if (error.response) {
-          Alert.alert("Erreur", error.response.data.message || "Erreur");
-        } else {
-          Alert.alert("Erreur", "Impossible de charger les contributions");
-        }
+      } catch (e) {
+        showError(e, "Impossible de charger les contributions");
       }
     } catch (error) {
       Alert.alert("Erreur", "Impossible de charger l'événement");
@@ -72,21 +70,11 @@ export default function EventDetail() {
       Alert.alert("Succes", "Invitation envoyée !");
       setEmail("");
     } catch (error) {
-      if (error.response) {
-        Alert.alert("Erreur", error.response.data.message || "Erreur");
-      } else {
-        Alert.alert("Erreur", "Impossible de se connecter au serveur");
-      }
+      showError(error);
     }
   };
 
-  if (isLoading) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color={colors.green} />
-      </View>
-    );
-  }
+  if (isLoading) return <Loader />;
 
   if (!event) return null;
 
@@ -110,11 +98,7 @@ export default function EventDetail() {
       Alert.alert("Succes", "Le tirage au sort a été effectué !");
       fetchEvent();
     } catch (error) {
-      if (error.response) {
-        Alert.alert("Erreur", error.response.data.message || "Erreur");
-      } else {
-        Alert.alert("Erreur", "Impossible de se connecter au serveur");
-      }
+      showError(error);
     }
   };
 
@@ -133,7 +117,7 @@ export default function EventDetail() {
       setContribAmount("");
       fetchEvent();
     } catch (error) {
-      Alert.alert("Erreur", error.response?.data?.message || "Erreur serveur");
+      showError(error);
     }
   };
 
@@ -319,55 +303,34 @@ export default function EventDetail() {
         )}
       </ScrollView>
 
-      <Modal visible={showDrawModal} transparent animationType="fade">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalBox}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>CONFIRMATION DU TIRAGE</Text>
-              <TouchableOpacity onPress={() => setShowDrawModal(false)}>
-                <MaterialIcons name="close" size={24} color="#333" />
-              </TouchableOpacity>
-            </View>
-
-            <Text style={styles.modalWarningIcon}>&#9888;</Text>
-
-            <Text style={styles.modalText}>
-              Êtes-vous sûr de vouloir effectuer le tirage au sort ?
-            </Text>
-            <Text style={styles.modalTextBold}>
-              Attention :{" "}
-              <Text style={{ fontWeight: "normal" }}>
-                Cette action est irréversible.
-              </Text>
-            </Text>
-
-            <View style={styles.modalBullets}>
-              <Text style={styles.modalBullet}>
-                • Tous les participants seront notifiés par email
-              </Text>
-              <Text style={styles.modalBullet}>
-                • Il ne sera plus possible d'ajouter de nouveaux participants
-              </Text>
-              <Text style={styles.modalBullet}>
-                • Le résultat du tirage sera définitif
-              </Text>
-            </View>
-
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={styles.modalCancelBtn}
-                onPress={() => setShowDrawModal(false)}>
-                <Text style={styles.modalCancelText}>Annuler</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.modalConfirmBtn}
-                onPress={handleConfirmDraw}>
-                <Text style={styles.modalConfirmText}>Confirmer le tirage</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+      <ConfirmationModal
+        visible={showDrawModal}
+        onClose={() => setShowDrawModal(false)}
+        onConfirm={handleConfirmDraw}
+        title="CONFIRMATION DU TIRAGE"
+        confirmText="Confirmer le tirage">
+        <Text style={styles.modalWarningIcon}>&#9888;</Text>
+        <Text style={styles.modalText}>
+          Êtes-vous sûr de vouloir effectuer le tirage au sort ?
+        </Text>
+        <Text style={styles.modalTextBold}>
+          Attention :{" "}
+          <Text style={{ fontWeight: "normal" }}>
+            Cette action est irréversible.
+          </Text>
+        </Text>
+        <View style={styles.modalBullets}>
+          <Text style={styles.modalBullet}>
+            • Tous les participants seront notifiés par email
+          </Text>
+          <Text style={styles.modalBullet}>
+            • Il ne sera plus possible d'ajouter de nouveaux participants
+          </Text>
+          <Text style={styles.modalBullet}>
+            • Le résultat du tirage sera définitif
+          </Text>
         </View>
-      </Modal>
+      </ConfirmationModal>
 
       <Modal visible={showContribModal} transparent animationType="fade">
         <View style={styles.modalOverlay}>

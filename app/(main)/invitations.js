@@ -4,14 +4,15 @@ import {
   View,
   FlatList,
   TouchableOpacity,
-  ActivityIndicator,
   Alert,
 } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import Loader from "../../components/Loader";
 import ScreenWithMenu from "../../components/ScreenWithMenu";
 import Title from "../../components/Title";
 import Icon from "../../components/Icon";
 import api from "../../utils/api";
+import showError from "../../utils/showError";
 import { useAuth } from "../../context/AuthContext";
 import colors from "../../assets/colors/colors.json";
 import convertDate from "../../utils/convertDate";
@@ -45,11 +46,7 @@ export default function Invitations() {
       );
       fetchInvitations();
     } catch (error) {
-      if (error.response) {
-        Alert.alert("Erreur", error.response.data.message || "Erreur");
-      } else {
-        Alert.alert("Erreur", "Impossible de se connecter au serveur");
-      }
+      showError(error);
     }
   };
 
@@ -112,7 +109,7 @@ export default function Invitations() {
         />
 
         {isLoading ? (
-          <ActivityIndicator size="large" color={colors.green} />
+          <Loader />
         ) : pendingInvitations.length === 0 ? (
           <View style={styles.empty}>
             <MaterialIcons
