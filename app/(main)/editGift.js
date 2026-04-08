@@ -2,8 +2,15 @@ import { useLocalSearchParams } from "expo-router";
 import EditGiftForm from "../../components/EditGiftForm";
 
 export default function EditGift() {
-  const { giftId, giftName, giftPrice, giftLink, giftImage, mode } =
-    useLocalSearchParams();
+  const {
+    giftId,
+    giftName,
+    giftPrice,
+    giftLink,
+    giftImage,
+    giftDescription,
+    mode,
+  } = useLocalSearchParams();
 
   return mode === "gift" ? (
     <EditGiftForm

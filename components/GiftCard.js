@@ -12,7 +12,7 @@ import { useRouter } from "expo-router";
 import OutlineButton from "./OutlineButton";
 import api from "../utils/api";
 
-export default function GiftCard({ gift, fetchData }) {
+export default function GiftCard({ gift }) {
   const router = useRouter();
 
   const handleDeleteGift = () => {
@@ -24,7 +24,7 @@ export default function GiftCard({ gift, fetchData }) {
         onPress: async () => {
           try {
             await api.delete(`/gift/${gift._id}`);
-            fetchData();
+            router.back();
           } catch (error) {
             Alert.alert("Erreur", "Impossible de supprimer le cadeau");
           }
