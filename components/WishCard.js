@@ -1,3 +1,7 @@
+// WishCard: displays a wish item in a christmas list.
+// Shows reservation overlay: green if reserved by current user, dark if reserved by someone else.
+// isMyList=true -> tapping opens edit form; isMyList=false -> tapping opens gift detail.
+
 import {
   View,
   Text,
@@ -13,6 +17,7 @@ import colors from "../assets/colors/colors.json";
 export default function WishCard({ gift, isMyList }) {
   const router = useRouter();
   const { user } = useAuth();
+  // Check reservation status to show appropriate overlay
   const isReservedByMe =
     gift.assignedTo === user._id || gift.assignedTo?._id === user._id;
   const isReservedByOther = gift.isAssigned && !isReservedByMe;

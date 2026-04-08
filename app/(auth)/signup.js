@@ -1,3 +1,6 @@
+// SignupScreen: registration form (firstname, lastname, pseudo, email, password).
+// On success, logs the user in automatically and redirects to dashboard.
+
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import {

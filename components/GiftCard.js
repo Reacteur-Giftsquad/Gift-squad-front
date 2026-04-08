@@ -1,3 +1,6 @@
+// GiftCard: displays a gift in the birthday gift list.
+// Tap to edit, delete button on the right side.
+
 import {
   Alert,
   Image,

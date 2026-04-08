@@ -1,3 +1,6 @@
+// useImagePicker: hook that provides camera/gallery image picking with permission handling.
+// Returns { image, pickFromCamera, pickFromGallery, clearImage }.
+
 import { useState } from "react";
 import { Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";

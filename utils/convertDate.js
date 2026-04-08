@@ -1,3 +1,4 @@
+// Formats a date into French: "le lundi 5 janvier 2026"
 const convertDate = (date) => {
   const daysOfTheWeek = [
     "dimanche",

@@ -1,3 +1,6 @@
+// Event type picker: lets the user choose between Secret Santa, Birthday, or Christmas List
+// before navigating to the actual creation form.
+
 import { View } from "react-native";
 import styles from "../../../styles/globals";
 import Title from "../../../components/Title";

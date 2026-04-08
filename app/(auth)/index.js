@@ -1,3 +1,6 @@
+// LoginScreen: email + password login form.
+// On success, saves the token via AuthContext and redirects to dashboard.
+
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { View, Alert } from "react-native";

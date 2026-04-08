@@ -1,3 +1,6 @@
+// RootNavigator: auth guard that redirects users based on login state.
+// Logged-in users are sent to dashboard, logged-out users to login screen.
+
 import { useEffect } from "react";
 import { Stack, useRouter, useSegments, useRootNavigationState } from "expo-router";
 import { ActivityIndicator, View } from "react-native";
@@ -9,14 +12,17 @@ export default function RootNavigator() {
   const segments = useSegments();
   const navigationState = useRootNavigationState();
 
+  // Redirect based on auth state whenever it changes
   useEffect(() => {
     if (isLoading) return;
     if (!navigationState?.key) return;
 
     const inAuth = segments[0] === "(auth)";
 
+    // Logged in but on auth screen -> go to dashboard
     if (token && user && inAuth) {
       router.replace("/(main)/dashboard");
+    // Not logged in but on a protected screen -> go to login
     } else if ((!token || !user) && !inAuth) {
       router.replace("/");
     }

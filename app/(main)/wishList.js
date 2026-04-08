@@ -1,3 +1,7 @@
+// WishList: displays a participant's wish list for a Christmas List event.
+// If it's the current user's list (isOwn), they can add/edit wishes.
+// If it's someone else's list, they can view and reserve wishes.
+
 import { useCallback, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, Alert } from "react-native";
 import { useLocalSearchParams, useRouter, useFocusEffect } from "expo-router";
@@ -15,6 +19,7 @@ export default function WishList() {
   const [isLoading, setIsLoading] = useState(true);
   const isMyList = isOwn === "true";
 
+  // Fetch all gifts for the event, then filter to only this owner's wishes
   const fetchData = async () => {
     try {
       const { data } = await api.get(`/gift/event/${eventId}`);

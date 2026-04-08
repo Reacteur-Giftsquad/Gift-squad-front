@@ -1,3 +1,6 @@
+// Invitations: shows pending event invitations the user has received.
+// User can accept or refuse each invitation.
+
 import { useEffect, useState, useCallback } from "react";
 import {
   Text,

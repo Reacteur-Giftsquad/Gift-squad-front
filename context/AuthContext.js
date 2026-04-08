@@ -1,3 +1,6 @@
+// AuthContext: manages user authentication state across the app.
+// Persists token + user data in AsyncStorage so sessions survive app restarts.
+
 import { createContext, useState, useEffect, useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -8,6 +11,7 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // On mount, try to restore a previous session from AsyncStorage
   useEffect(() => {
     const restoreSession = async () => {
       const savedToken = await AsyncStorage.getItem("token");
@@ -27,6 +31,7 @@ export function AuthProvider({ children }) {
     restoreSession();
   }, []);
 
+  // Save token + user to state and AsyncStorage after login
   const login = async (newToken, userData) => {
     setToken(newToken);
     setUser(userData);
@@ -34,11 +39,13 @@ export function AuthProvider({ children }) {
     await AsyncStorage.setItem("user", JSON.stringify(userData));
   };
 
+  // Update user data (e.g. after profile edit) without changing the token
   const updateUser = async (userData) => {
     setUser(userData);
     await AsyncStorage.setItem("user", JSON.stringify(userData));
   };
 
+  // Clear all auth data from state and storage
   const logout = async () => {
     setUser(null);
     setToken(null);
@@ -55,6 +62,7 @@ export function AuthProvider({ children }) {
   );
 }
 
+// Hook to access auth state from any component
 export function useAuth() {
   return useContext(AuthContext);
 }

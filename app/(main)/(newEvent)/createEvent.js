@@ -1,3 +1,6 @@
+// CreateEvent: form to create a new event (title, date, budget).
+// The event type is passed via route params from the type selection screen.
+
 import { useState } from "react";
 import { Alert, ScrollView } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -11,6 +14,7 @@ import Title from "../../../components/Title";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import ScreenWithMenu from "../../../components/ScreenWithMenu";
 
+// Maps route param keys to display labels
 const TYPE_LABELS = {
   secretSanta: "Secret Santa",
   birthday: "Anniversaire",
