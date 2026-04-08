@@ -1,23 +1,23 @@
 // useNotifications: registers push notifications and sends the token to the backend.
-// Skipped in Expo Go (notifications not supported there).
 // When user taps a notification, navigates to the invitations screen.
 
 import { useEffect, useRef } from "react";
-import { Platform, LogBox } from "react-native";
+import { Platform } from "react-native";
+import * as Notifications from "expo-notifications";
+import * as Device from "expo-device";
 import Constants from "expo-constants";
 import { useRouter } from "expo-router";
 import api from "./api";
 import { useAuth } from "../context/AuthContext";
 
-const isExpoGo = Constants.executionEnvironment === "expoGo";
-
-// Suppress expo-notifications warnings in Expo Go
-if (isExpoGo) {
-  LogBox.ignoreLogs([
-    "expo-notifications",
-    "`expo-notifications` functionality is not fully supported",
-  ]);
-}
+// Configure how notifications appear when app is in foreground
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function useNotifications() {
   const { user } = useAuth();
@@ -25,26 +25,10 @@ export default function useNotifications() {
   const responseListener = useRef();
 
   useEffect(() => {
-    // Skip if no user logged in or running in Expo Go
-    if (!user || isExpoGo) return;
+    if (!user || !Device.isDevice) return;
 
     const setup = async () => {
       try {
-        // Dynamic require to avoid crashes in Expo Go
-        const Notifications = require("expo-notifications");
-        const Device = require("expo-device");
-
-        // Configure how notifications appear when app is in foreground
-        Notifications.setNotificationHandler({
-          handleNotification: async () => ({
-            shouldShowAlert: true,
-            shouldPlaySound: true,
-            shouldSetBadge: false,
-          }),
-        });
-
-        if (!Device.isDevice) return;
-
         // Request notification permissions
         const { status: existingStatus } =
           await Notifications.getPermissionsAsync();
@@ -88,10 +72,7 @@ export default function useNotifications() {
     // Cleanup listener on unmount
     return () => {
       if (responseListener.current) {
-        try {
-          const N = require("expo-notifications");
-          N.removeNotificationSubscription(responseListener.current);
-        } catch {}
+        Notifications.removeNotificationSubscription(responseListener.current);
       }
     };
   }, [user]);
