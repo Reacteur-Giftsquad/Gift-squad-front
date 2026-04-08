@@ -20,7 +20,7 @@ export default function WishCard({ gift, isMyList }) {
   const handlePress = () => {
     if (isMyList) {
       router.push({
-        pathname: "/(main)/editWish",
+        pathname: "/(main)/editGift",
         params: {
           giftId: gift._id,
           giftName: gift.name,
@@ -28,6 +28,7 @@ export default function WishCard({ gift, isMyList }) {
           giftLink: gift.link || "",
           giftImage: gift.image_url || "",
           giftDescription: gift.description || "",
+          mode: "wish",
         },
       });
     } else {

@@ -43,6 +43,7 @@ export default function GiftCard({ gift, fetchData }) {
             giftPrice: String(gift.price),
             giftLink: gift.link || "",
             giftImage: gift.image_url || "",
+            mode: "gift",
           },
         })
       }>
