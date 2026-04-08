@@ -1,9 +1,11 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import colors from "../assets/colors/colors.json";
 import { useAuth } from "../context/AuthContext";
+import { useRouter } from "expo-router";
 
 export default function WishCard({ gift, isMyList }) {
   const { user } = useAuth();
+  const router = useRouter();
 
   const isReservedByMe =
     gift.assignedTo === user._id || gift.assignedTo?._id === user._id;
