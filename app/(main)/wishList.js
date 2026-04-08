@@ -2,16 +2,14 @@ import { useCallback, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, Alert } from "react-native";
 import { useLocalSearchParams, useRouter, useFocusEffect } from "expo-router";
 import api from "../../utils/api";
-import { useAuth } from "../../context/AuthContext";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Loader from "../../components/Loader";
 import SubmitButton from "../../components/SubmitButton";
-import styles from "../../styles/giftListStyles";
 import WishCard from "../../components/WishCard";
+import styles from "../../styles/giftListStyles";
 
 export default function WishList() {
   const { eventId, ownerId, ownerName, isOwn } = useLocalSearchParams();
-  const { user } = useAuth();
   const router = useRouter();
   const [gifts, setGifts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -57,7 +55,9 @@ export default function WishList() {
         keyExtractor={(item) => String(item._id)}
         contentContainerStyle={{ padding: 15, gap: 15, paddingBottom: 30 }}
         showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => <WishCard gift={item} isMyList={isMyList} />}
+        renderItem={({ item }) => (
+          <WishCard gift={item} isMyList={isMyList} />
+        )}
         ListFooterComponent={
           isMyList ? (
             <SubmitButton

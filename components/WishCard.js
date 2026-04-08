@@ -1,54 +1,60 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import colors from "../assets/colors/colors.json";
-import { useAuth } from "../context/AuthContext";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { useRouter } from "expo-router";
+import { useAuth } from "../context/AuthContext";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import colors from "../assets/colors/colors.json";
 
 export default function WishCard({ gift, isMyList }) {
-  const { user } = useAuth();
   const router = useRouter();
-
+  const { user } = useAuth();
   const isReservedByMe =
     gift.assignedTo === user._id || gift.assignedTo?._id === user._id;
   const isReservedByOther = gift.isAssigned && !isReservedByMe;
 
+  const handlePress = () => {
+    if (isMyList) {
+      router.push({
+        pathname: "/(main)/editGift",
+        params: {
+          giftId: gift._id,
+          giftName: gift.name,
+          giftPrice: String(gift.price || ""),
+          giftLink: gift.link || "",
+          giftImage: gift.image_url || "",
+          giftDescription: gift.description || "",
+          mode: "wish",
+        },
+      });
+    } else {
+      router.push({
+        pathname: "/(main)/giftDetails",
+        params: {
+          giftId: gift._id,
+          giftName: gift.name,
+          giftLink: gift.link || "",
+          giftImage: gift.image_url || "",
+          giftDescription: gift.descritption || "",
+          assignedTo: gift.assignedTo,
+          isAssigned: gift.isAssigned,
+        },
+      });
+    }
+  };
+
   return (
-    <TouchableOpacity
-      activeOpacity={isMyList ? 0.7 : 1}
-      onPress={() => {
-        if (isMyList) {
-          router.push({
-            pathname: "/(main)/editGift",
-            params: {
-              giftId: gift._id,
-              giftName: gift.name,
-              giftPrice: String(gift.price || ""),
-              giftLink: gift.link || "",
-              giftImage: gift.image_url || "",
-              giftDescription: gift.description || "",
-              mode: "wish",
-            },
-          });
-        } else {
-          router.push({
-            pathname: "/(main)/giftDetails",
-            params: {
-              giftId: gift._id,
-              giftName: gift.name,
-              giftLink: gift.link || "",
-              giftImage: gift.image_url || "",
-              giftDescription: gift.descritption || "",
-              assignedTo: gift.assignedTo,
-              isAssigned: gift.isAssigned,
-            },
-          });
-        }
-      }}>
-      <View style={cardStyles.card}>
-        <View style={cardStyles.imageContainer}>
+    <TouchableOpacity activeOpacity={isMyList ? 0.7 : 1} onPress={handlePress}>
+      <View style={styles.card}>
+        <View style={styles.imageContainer}>
           {gift.image_url ? (
-            <Image source={{ uri: gift.image_url }} style={cardStyles.image} />
+            <Image source={{ uri: gift.image_url }} style={styles.image} />
           ) : (
-            <View style={[cardStyles.image, cardStyles.placeholder]}>
+            <View style={[styles.image, styles.placeholder]}>
               <MaterialIcons
                 name="card-giftcard"
                 size={40}
@@ -59,11 +65,9 @@ export default function WishCard({ gift, isMyList }) {
           {!isMyList && isReservedByMe && (
             <>
               <View
-                style={[
-                  cardStyles.reservedOverlay,
-                  cardStyles.reservedByUser,
-                ]}></View>
-              <Text style={cardStyles.reservedText}>
+                style={[styles.reservedOverlay, styles.reservedByUser]}
+              />
+              <Text style={styles.reservedText}>
                 Vous vous occuppez de ce cadeau
               </Text>
             </>
@@ -71,31 +75,23 @@ export default function WishCard({ gift, isMyList }) {
           {!isMyList && isReservedByOther && (
             <>
               <View
-                style={[
-                  cardStyles.reservedOverlay,
-                  cardStyles.reservedByOthers,
-                ]}></View>
-              <Text style={cardStyles.reservedText}>
+                style={[styles.reservedOverlay, styles.reservedByOthers]}
+              />
+              <Text style={styles.reservedText}>
                 Quelqu'un s'occupe de ce cadeau
               </Text>
             </>
           )}
-          {!isMyList && !gift.isAssigned && (
-            <TouchableOpacity
-              style={[cardStyles.overlay, { backgroundColor: "transparent" }]}
-              onPress={() => handleReserve(gift)}
-            />
-          )}
         </View>
-        <View style={cardStyles.info}>
-          <Text style={cardStyles.name}>{gift.name}</Text>
+        <View style={styles.info}>
+          <Text style={styles.name}>{gift.name}</Text>
         </View>
       </View>
     </TouchableOpacity>
   );
 }
 
-const cardStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "center",
@@ -117,23 +113,6 @@ const cardStyles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
     justifyContent: "center",
     alignItems: "center",
-  },
-  overlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(78,173,81,0.8)",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 5,
-  },
-  overlayText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 12,
-    textAlign: "center",
   },
   info: {
     flex: 1,
