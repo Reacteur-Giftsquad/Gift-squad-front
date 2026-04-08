@@ -90,7 +90,6 @@ export default function GiftList() {
           <Text style={{ fontWeight: "bold" }}>{totalGiftsPrice}€</Text>
         </Text>
 
-        {/* changed from gifts.map => FlatList */}
         <FlatList
           data={gifts}
           keyExtractor={(item) => String(item._id)}
