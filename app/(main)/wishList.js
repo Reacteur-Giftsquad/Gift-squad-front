@@ -66,7 +66,7 @@ export default function WishList() {
         onPress={() => {
           if (isMyList) {
             router.push({
-              pathname: "/(main)/editWish",
+              pathname: "/(main)/editGift",
               params: {
                 giftId: gift._id,
                 giftName: gift.name,
@@ -74,6 +74,7 @@ export default function WishList() {
                 giftLink: gift.link || "",
                 giftImage: gift.image_url || "",
                 giftDescription: gift.description || "",
+                mode: "wish",
               },
             });
           } else {
