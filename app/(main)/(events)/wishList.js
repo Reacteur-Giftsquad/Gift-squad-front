@@ -43,7 +43,7 @@ export default function WishList() {
 
   return (
     <View style={styles.container}>
-      {gifts.length > 0 ? (
+      {gifts.length > 0 || isMyList ? (
         <FlatList
           data={gifts}
           keyExtractor={(item) => String(item._id)}
@@ -68,7 +68,7 @@ export default function WishList() {
           }
         />
       ) : (
-        <View>
+        <View style={{ padding: 20 }}>
           <Text style={styles.emptyText}>
             {ownerName} n'a pas encore ajouté un souhait
           </Text>
