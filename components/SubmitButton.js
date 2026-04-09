@@ -14,18 +14,35 @@ const SubmitButton = ({
   bgColor,
   color,
   isSubmitting,
+  fontSize,
+  flex,
 }) => {
   return (
     <Pressable
-      style={[styles.button, { backgroundColor: bgColor || colors.green }]}
+      style={[
+        styles.button,
+        {
+          paddign: fontSize === "sm" ? 10 : 12,
+          backgroundColor: bgColor || colors.green,
+          flex: flex && 1,
+        },
+      ]}
       onPress={onPress}
       disabled={isSubmitting}>
       {isSubmitting ? (
         <ActivityIndicator color={color || "white"} />
       ) : (
         <View style={styles.buttonContent}>
-          <Text>{icon}</Text>
-          <Text style={[styles.text, { color: color || "white" }]}>{text}</Text>
+          {icon && <Text>{icon}</Text>}
+          {text && (
+            <Text
+              style={{
+                color: color || "white",
+                fontSize: fontSize === "sm" ? 16 : 18,
+              }}>
+              {text}
+            </Text>
+          )}
         </View>
       )}
     </Pressable>
@@ -34,8 +51,8 @@ const SubmitButton = ({
 
 const styles = StyleSheet.create({
   button: {
-    padding: 12,
-    borderRadius: 5,
+    padding: 10,
+    borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -43,9 +60,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     gap: 10,
-  },
-  text: {
-    fontSize: 18,
   },
 });
 export default SubmitButton;

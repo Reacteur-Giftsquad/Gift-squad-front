@@ -206,8 +206,9 @@ export default function EventDetail() {
                     {isYou && <Text style={styles.youLabel}> (vous)</Text>}
                   </Text>
                   {isChristmasList && (
-                    <TouchableOpacity
-                      style={styles.participateBtn}
+                    <SubmitButton
+                      text={isYou ? "Ma liste" : "Liste de souhaits"}
+                      fontSize="sm"
                       onPress={() =>
                         router.push({
                           pathname: "/(main)/wishList",
@@ -218,17 +219,16 @@ export default function EventDetail() {
                             isOwn: isYou ? "true" : "false",
                           },
                         })
-                      }>
+                      }
+                      icon={
                       <FontAwesome6
                         name="gift"
                         size={14}
                         color="white"
                         style={{ marginRight: 6 }}
                       />
-                      <Text style={styles.participateBtnText}>
-                        {isYou ? "Ma liste" : "Liste de souhaits"}
-                      </Text>
-                    </TouchableOpacity>
+                      }
+                    />
                   )}
                   {isSecretSanta && isDrawn && !isYou && (
                     <MaterialIcons
@@ -244,13 +244,11 @@ export default function EventDetail() {
                         {contribution.amount}€
                       </Text>
                     ) : isYou ? (
-                      <TouchableOpacity
-                        style={styles.participateBtn}
-                        onPress={() => setShowContribModal(true)}>
-                        <Text style={styles.participateBtnText}>
-                          Participer
-                        </Text>
-                      </TouchableOpacity>
+                      <SubmitButton
+                        text="Participer"
+                        fontSize="sm"
+                        onPress={() => setShowContribModal(true)}
+                      />
                     ) : (
                       <MaterialIcons
                         name="hourglass-empty"
@@ -275,11 +273,10 @@ export default function EventDetail() {
                   autoCapitalize="none"
                   onFocus={() => setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100)}
                 />
-                <TouchableOpacity
-                  style={styles.addBtn}
-                  onPress={handleAddParticipant}>
-                  <MaterialIcons name="add" size={24} color="white" />
-                </TouchableOpacity>
+                <SubmitButton
+                  onPress={handleAddParticipant}
+                  icon={<MaterialIcons name="add" size={24} color="white" />}
+                />
               </View>
             </>
           )}
