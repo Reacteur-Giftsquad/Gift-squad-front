@@ -44,8 +44,7 @@ export default function DashboardScreen() {
       <ScrollView
         style={styles.scrollContainer}
         contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+        showsVerticalScrollIndicator={false}>
         <View style={styles.heroSection}>
           <Text style={styles.welcome}>
             Bienvenue {user?.pseudo || user?.firstname || ""} !
@@ -70,24 +69,24 @@ export default function DashboardScreen() {
                   pathname: "/(main)/(newEvent)/createEvent",
                   params: { type: activity.type },
                 })
-              }
-            >
+              }>
               <View
                 style={[
                   styles.iconCircle,
                   { backgroundColor: activity.color + "18" },
-                ]}
-              >
+                ]}>
                 <FontAwesome6
                   name={activity.icon}
                   size={28}
                   color={activity.color}
                 />
               </View>
-              <Text style={styles.cardLabel}>{activity.label}</Text>
-              <Text style={styles.cardDescription}>
-                {activity.description}
-              </Text>
+              <View style={{ justifyContent: "space-between" }}>
+                <Text style={styles.cardLabel}>{activity.label}</Text>
+                <Text style={styles.cardDescription}>
+                  {activity.description}
+                </Text>
+              </View>
             </TouchableOpacity>
           ))}
           <SubmitButton
