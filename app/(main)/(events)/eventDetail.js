@@ -11,7 +11,9 @@ import {
   Text,
   ScrollView,
   TextInput,
+  TouchableOpacity,
   Alert,
+  Modal,
   KeyboardAvoidingView,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -40,6 +42,27 @@ export default function EventDetail() {
   const [showContribModal, setShowContribModal] = useState(false);
   const [contribAmount, setContribAmount] = useState("");
   const scrollRef = useRef();
+
+  const handleRemoveMember = (member) => {
+    const name = member.pseudo || member.firstname;
+    Alert.alert("Retirer", `Retirer "${name}" de l'événement ?`, [
+      { text: "Annuler", style: "cancel" },
+      {
+        text: "Retirer",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await api.post(`/events/${id}/remove-member`, {
+              userId: member._id,
+            });
+            fetchEvent();
+          } catch (error) {
+            showError(error, "Impossible de retirer ce participant");
+          }
+        },
+      },
+    ]);
+  };
 
   const fetchEvent = async () => {
     try {
@@ -198,7 +221,12 @@ export default function EventDetail() {
               );
 
               return (
-                <View key={member._id || index} style={styles.participantRow}>
+                <TouchableOpacity
+                  key={member._id || index}
+                  activeOpacity={0.7}
+                  onLongPress={isCreator && !isYou ? () => handleRemoveMember(member) : undefined}
+                >
+                <View style={styles.participantRow}>
                   <Text style={styles.participantName}>
                     {member.pseudo || member.firstname}
                     {isYou && <Text style={styles.youLabel}> (vous)</Text>}
@@ -255,6 +283,7 @@ export default function EventDetail() {
                       />
                     ))}
                 </View>
+                </TouchableOpacity>
               );
             })}
 
@@ -298,7 +327,11 @@ export default function EventDetail() {
                   onPress={() => setShowDrawModal(true)}
                 />
               </>
-            ) : null}
+            ) : (
+              <Text style={styles.warningText}>
+                Le tirage au sort n'a pas encore été effectué. L'organisateur s'en charge !
+              </Text>
+            )}
           </View>
         )}
       </ScrollView>

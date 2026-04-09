@@ -29,7 +29,7 @@ export default function GiftDetails() {
   const router = useRouter();
   const isReservedByMe =
     assignedTo === user._id || assignedTo?._id === user._id;
-  const isReservedByOther = isAssigned && !isReservedByMe;
+  const isReservedByOther = isAssigned === "true" && !isReservedByMe;
 
   const handleReserve = async () => {
     setShowReserveModal(false);
