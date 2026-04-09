@@ -11,9 +11,7 @@ import {
   Text,
   ScrollView,
   TextInput,
-  TouchableOpacity,
   Alert,
-  Modal,
   KeyboardAvoidingView,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -221,12 +219,12 @@ export default function EventDetail() {
                         })
                       }
                       icon={
-                      <FontAwesome6
-                        name="gift"
-                        size={14}
-                        color="white"
-                        style={{ marginRight: 6 }}
-                      />
+                        <FontAwesome6
+                          name="gift"
+                          size={14}
+                          color="white"
+                          style={{ marginRight: 6 }}
+                        />
                       }
                     />
                   )}
@@ -322,9 +320,6 @@ export default function EventDetail() {
           </Text>
         </Text>
         <View style={styles.modalBullets}>
-          <Text style={styles.modalBullet}>
-            • Tous les participants seront notifiés par email
-          </Text>
           <Text style={styles.modalBullet}>
             • Il ne sera plus possible d'ajouter de nouveaux participants
           </Text>
