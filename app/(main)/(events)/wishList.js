@@ -3,7 +3,7 @@
 // If it's someone else's list, they can view and reserve wishes.
 
 import { useCallback, useState } from "react";
-import { View, FlatList, Alert } from "react-native";
+import { View, FlatList, Alert, Text } from "react-native";
 import { useLocalSearchParams, useRouter, useFocusEffect } from "expo-router";
 import api from "../../../utils/api";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -43,27 +43,37 @@ export default function WishList() {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={gifts}
-        keyExtractor={(item) => String(item._id)}
-        contentContainerStyle={{ padding: 15, gap: 15, paddingBottom: 30 }}
-        showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => <WishCard gift={item} isMyList={isMyList} />}
-        ListFooterComponent={
-          isMyList ? (
-            <SubmitButton
-              text="Ajouter un souhait"
-              icon={<MaterialIcons name="add" size={24} color="white" />}
-              onPress={() =>
-                router.push({
-                  pathname: "/(main)/addGift",
-                  params: { eventId, ownerId, mode: "wish" },
-                })
-              }
-            />
-          ) : null
-        }
-      />
+      {gifts.length > 0 ? (
+        <FlatList
+          data={gifts}
+          keyExtractor={(item) => String(item._id)}
+          contentContainerStyle={{ padding: 15, gap: 15, paddingBottom: 30 }}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <WishCard gift={item} isMyList={isMyList} />
+          )}
+          ListFooterComponent={
+            isMyList ? (
+              <SubmitButton
+                text="Ajouter un souhait"
+                icon={<MaterialIcons name="add" size={24} color="white" />}
+                onPress={() =>
+                  router.push({
+                    pathname: "/(main)/addGift",
+                    params: { eventId, ownerId, mode: "wish" },
+                  })
+                }
+              />
+            ) : null
+          }
+        />
+      ) : (
+        <View>
+          <Text style={styles.emptyText}>
+            {ownerName} n'a pas encore ajouté un souhait
+          </Text>
+        </View>
+      )}
     </View>
   );
 }
