@@ -124,6 +124,15 @@ export default function AddGiftForm({ eventId, ownerId, mode = "gift" }) {
           />
         )}
 
+        {isWish && (
+          <TextArea
+            title="Description (optionnelle)"
+            placeholder="Description du souhait"
+            value={form.description}
+            onChangeText={(v) => setForm({ ...form, description: v })}
+          />
+        )}
+
         <Text style={s.label}>Image du {label}</Text>
         <View style={s.imageButtons}>
           <FilledIcon onPress={pickFromCamera}>
@@ -156,15 +165,6 @@ export default function AddGiftForm({ eventId, ownerId, mode = "gift" }) {
             placeholder="https://example.com/produit"
             setState={(v) => setForm({ ...form, link: v })}
             value={form.link}
-          />
-        )}
-
-        {isWish && (
-          <TextArea
-            title="Description (optionnelle)"
-            placeholder="Description du souhait"
-            value={form.description}
-            onChangeText={(v) => setForm({ ...form, description: v })}
           />
         )}
 

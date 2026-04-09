@@ -43,6 +43,8 @@ export default function EventDetail() {
   const [showContribModal, setShowContribModal] = useState(false);
   const [contribAmount, setContribAmount] = useState("");
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedDraw, setSelectedDraw] = useState(null);
+  const [drawRevealed, setDrawRevealed] = useState(false);
   const scrollRef = useRef();
 
   const handleRemoveMember = (member) => {
@@ -268,11 +270,19 @@ export default function EventDetail() {
                     />
                   )}
                   {isSecretSanta && isDrawn && !isYou && (
-                    <MaterialIcons
-                      name="visibility"
-                      size={22}
-                      color={colors.green}
-                    />
+                    <TouchableOpacity
+                      onPress={() => {
+                        const draw = event.secret_Santa_Draw?.find(
+                          (d) => (d.giver?._id || d.giver) === member._id,
+                        );
+                        if (draw) setSelectedDraw({ giver: member, receiver: draw.receiver });
+                      }}>
+                      <MaterialIcons
+                        name="visibility"
+                        size={22}
+                        color={colors.green}
+                      />
+                    </TouchableOpacity>
                   )}
                   {!isSecretSanta &&
                     !isChristmasList &&
@@ -395,6 +405,40 @@ export default function EventDetail() {
           value={contribAmount}
           onChangeText={(v) => setContribAmount(v.replace(/[^0-9]/g, ""))}
         />
+      </ConfirmationModal>
+
+      <ConfirmationModal
+        visible={!!selectedDraw}
+        onClose={() => {
+          setSelectedDraw(null);
+          setDrawRevealed(false);
+        }}
+        onConfirm={() => {
+          if (drawRevealed) {
+            setSelectedDraw(null);
+            setDrawRevealed(false);
+          } else {
+            setDrawRevealed(true);
+          }
+        }}
+        title="TIRAGE AU SORT"
+        confirmText={drawRevealed ? "OK" : "Oui"}
+        cancelText={drawRevealed ? "Fermer" : "Non"}>
+        {!drawRevealed ? (
+          <Text style={styles.modalText}>
+            Voulez-vous voir qui{" "}
+            {selectedDraw?.giver?.pseudo || selectedDraw?.giver?.firstname} a tiré ?
+          </Text>
+        ) : (
+          <>
+            <Text style={styles.modalText}>
+              {selectedDraw?.giver?.pseudo || selectedDraw?.giver?.firstname} a tiré :
+            </Text>
+            <Text style={[styles.modalTextBold, { fontSize: 20, textAlign: "center" }]}>
+              {selectedDraw?.receiver?.pseudo || selectedDraw?.receiver?.firstname}
+            </Text>
+          </>
+        )}
       </ConfirmationModal>
     </KeyboardAvoidingView>
   );

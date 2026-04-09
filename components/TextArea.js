@@ -1,7 +1,7 @@
 import { Text, TextInput, StyleSheet } from "react-native";
 import s from "../styles/addGiftStyles";
 
-export default function TextArea({ title, placeholder, value, onChangeText }) {
+export default function TextArea({ title, placeholder, value, onChangeText, onFocus }) {
   return (
     <>
       {title && <Text style={s.label}>{title}</Text>}
@@ -11,6 +11,7 @@ export default function TextArea({ title, placeholder, value, onChangeText }) {
         multiline
         value={value}
         onChangeText={onChangeText}
+        onFocus={onFocus}
       />
     </>
   );

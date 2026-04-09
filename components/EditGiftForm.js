@@ -153,6 +153,15 @@ export default function EditGiftForm({
           value={form.link}
         />
 
+        {isWish && (
+          <TextArea
+            title="Description (optionnelle)"
+            placeholder="Description du souhait"
+            value={form.description}
+            onChangeText={(v) => setForm({ ...form, description: v })}
+          />
+        )}
+
         <Text style={s.label}>Image du {label}</Text>
         <View style={s.imageButtons}>
           <FilledIcon onPress={pickFromCamera}>
@@ -178,15 +187,6 @@ export default function EditGiftForm({
             </>
           )}
         </View>
-
-        {isWish && (
-          <TextArea
-            title="Description (optionnelle)"
-            placeholder="Description du souhait"
-            value={form.description}
-            onChangeText={(v) => setForm({ ...form, description: v })}
-          />
-        )}
 
         <SubmitButton
           text={isWish ? "Enregistrer" : "Modifier le cadeau"}
