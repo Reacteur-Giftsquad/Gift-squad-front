@@ -3,33 +3,34 @@
 //   - Secret Santa: shows draw button (creator only) and draw results
 //   - Birthday: shows gift list + contribution system
 //   - Christmas List: shows each participant's wish list
-// Creator can invite participants by email.
+// Only the creator can invite participants by email.
 
-import { useCallback, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   Text,
   ScrollView,
-  RefreshControl,
   TextInput,
   TouchableOpacity,
   Alert,
   Modal,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
-import { useLocalSearchParams, useRouter, useFocusEffect } from "expo-router";
-import api from "../../../utils/api";
-import showError from "../../../utils/showError";
-import { useAuth } from "../../../context/AuthContext";
-import colors from "../../../assets/colors/colors.json";
-import convertDate from "../../../utils/convertDate";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import api from "../../utils/api";
+import showError from "../../utils/showError";
+import { useAuth } from "../../context/AuthContext";
+import colors from "../../assets/colors/colors.json";
+import convertDate from "../../utils/convertDate";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import Loader from "../../../components/Loader";
-import SubmitButton from "../../../components/SubmitButton";
-import Title from "../../../components/Title";
-import ConfirmationModal from "../../../components/ConfirmationModal";
-import styles from "../../../styles/eventDetailStyles";
+import Loader from "../../components/Loader";
+import SubmitButton from "../../components/SubmitButton";
+import Title from "../../components/Title";
+import ConfirmationModal from "../../components/ConfirmationModal";
+import styles from "../../styles/eventDetailStyles";
+import { useBehavior } from "../../utils/useBehavior";
 
 export default function EventDetail() {
   const { id } = useLocalSearchParams();
@@ -41,30 +42,10 @@ export default function EventDetail() {
   const [contributions, setContributions] = useState([]);
   const [showDrawModal, setShowDrawModal] = useState(false);
   const [showContribModal, setShowContribModal] = useState(false);
+  const [showRevealModal, setShowRevealModal] = useState(false);
+  const [revealed, setRevealed] = useState(false);
   const [contribAmount, setContribAmount] = useState("");
-  const [refreshing, setRefreshing] = useState(false);
-  const [selectedDraw, setSelectedDraw] = useState(null);
-  const [drawRevealed, setDrawRevealed] = useState(false);
-  const scrollRef = useRef();
-
-  const handleRemoveMember = (member) => {
-    const name = member.pseudo || member.firstname;
-    Alert.alert("Retirer", `Retirer "${name}" de l'événement ?`, [
-      { text: "Annuler", style: "cancel" },
-      {
-        text: "Retirer",
-        style: "destructive",
-        onPress: async () => {
-          try {
-            await api.delete(`/events/${id}/remove-user/${member._id}`);
-            fetchEvent();
-          } catch (error) {
-            showError(error, "Impossible de retirer ce participant");
-          }
-        },
-      },
-    ]);
-  };
+  const behaviour = useBehavior();
 
   const fetchEvent = async () => {
     try {
@@ -83,17 +64,9 @@ export default function EventDetail() {
     setIsLoading(false);
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchEvent();
-    }, []),
-  );
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await fetchEvent();
-    setRefreshing(false);
-  };
+  useEffect(() => {
+    fetchEvent();
+  }, []);
 
   const handleAddParticipant = async () => {
     if (!email) return;
@@ -164,15 +137,18 @@ export default function EventDetail() {
 
   return (
     <KeyboardAvoidingView
-      behavior="padding"
+      behavior={behaviour}
+      enabled={Platform.OS === "android"}
       style={styles.container}>
-      <ScrollView
-        ref={scrollRef}
-        contentContainerStyle={styles.content}
-        keyboardShouldPersistTaps="handled"
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.green]} />
-        }>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()}>
+          <MaterialIcons name="arrow-back" size={24} color="white" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>{event.name}</Text>
+        <View style={{ width: 24 }} />
+      </View>
+
+      <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.topSection}>
           <View style={styles.dateBar}>
             <MaterialIcons name="calendar-month" size={20} color="white" />
@@ -195,7 +171,15 @@ export default function EventDetail() {
             </View>
           )}
 
-          {isDrawn && myDraw && (
+          {isDrawn && myDraw && !revealed && (
+            <SubmitButton
+              text="Voir qui j'ai tiré"
+              icon={<MaterialIcons name="visibility" size={20} color="white" />}
+              onPress={() => setShowRevealModal(true)}
+            />
+          )}
+
+          {isDrawn && myDraw && revealed && (
             <View style={styles.drawResultBar}>
               <Text style={styles.drawResultText}>
                 VOUS AVEZ TIRÉ{" "}
@@ -234,20 +218,14 @@ export default function EventDetail() {
               );
 
               return (
-                <TouchableOpacity
-                  key={member._id || index}
-                  activeOpacity={0.7}
-                  onLongPress={isCreator && !isYou ? () => handleRemoveMember(member) : undefined}
-                >
-                <View style={styles.participantRow}>
+                <View key={member._id || index} style={styles.participantRow}>
                   <Text style={styles.participantName}>
                     {member.pseudo || member.firstname}
                     {isYou && <Text style={styles.youLabel}> (vous)</Text>}
                   </Text>
                   {isChristmasList && (
-                    <SubmitButton
-                      text={isYou ? "Ma liste" : "Liste de souhaits"}
-                      fontSize="sm"
+                    <TouchableOpacity
+                      style={styles.participateBtn}
                       onPress={() =>
                         router.push({
                           pathname: "/(main)/wishList",
@@ -258,31 +236,24 @@ export default function EventDetail() {
                             isOwn: isYou ? "true" : "false",
                           },
                         })
-                      }
-                      icon={
-                        <FontAwesome6
-                          name="gift"
-                          size={14}
-                          color="white"
-                          style={{ marginRight: 6 }}
-                        />
-                      }
-                    />
+                      }>
+                      <FontAwesome6
+                        name="gift"
+                        size={14}
+                        color="white"
+                        style={{ marginRight: 6 }}
+                      />
+                      <Text style={styles.participateBtnText}>
+                        {isYou ? "Ma liste" : "Liste de souhaits"}
+                      </Text>
+                    </TouchableOpacity>
                   )}
                   {isSecretSanta && isDrawn && !isYou && (
-                    <TouchableOpacity
-                      onPress={() => {
-                        const draw = event.secret_Santa_Draw?.find(
-                          (d) => (d.giver?._id || d.giver) === member._id,
-                        );
-                        if (draw) setSelectedDraw({ giver: member, receiver: draw.receiver });
-                      }}>
-                      <MaterialIcons
-                        name="visibility"
-                        size={22}
-                        color={colors.green}
-                      />
-                    </TouchableOpacity>
+                    <MaterialIcons
+                      name="visibility"
+                      size={22}
+                      color={colors.green}
+                    />
                   )}
                   {!isSecretSanta &&
                     !isChristmasList &&
@@ -291,11 +262,13 @@ export default function EventDetail() {
                         {contribution.amount}€
                       </Text>
                     ) : isYou ? (
-                      <SubmitButton
-                        text="Participer"
-                        fontSize="sm"
-                        onPress={() => setShowContribModal(true)}
-                      />
+                      <TouchableOpacity
+                        style={styles.participateBtn}
+                        onPress={() => setShowContribModal(true)}>
+                        <Text style={styles.participateBtnText}>
+                          Participer
+                        </Text>
+                      </TouchableOpacity>
                     ) : (
                       <MaterialIcons
                         name="hourglass-empty"
@@ -304,7 +277,6 @@ export default function EventDetail() {
                       />
                     ))}
                 </View>
-                </TouchableOpacity>
               );
             })}
 
@@ -319,12 +291,12 @@ export default function EventDetail() {
                   onChangeText={setEmail}
                   keyboardType="email-address"
                   autoCapitalize="none"
-                  onFocus={() => setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100)}
                 />
-                <SubmitButton
-                  onPress={handleAddParticipant}
-                  icon={<MaterialIcons name="add" size={24} color="white" />}
-                />
+                <TouchableOpacity
+                  style={styles.addBtn}
+                  onPress={handleAddParticipant}>
+                  <MaterialIcons name="add" size={24} color="white" />
+                </TouchableOpacity>
               </View>
             </>
           )}
@@ -348,14 +320,26 @@ export default function EventDetail() {
                   onPress={() => setShowDrawModal(true)}
                 />
               </>
-            ) : (
-              <Text style={styles.warningText}>
-                Le tirage au sort n'a pas encore été effectué. L'organisateur s'en charge !
-              </Text>
-            )}
+            ) : null}
           </View>
         )}
       </ScrollView>
+
+      <ConfirmationModal
+        visible={showRevealModal}
+        onClose={() => setShowRevealModal(false)}
+        onConfirm={() => {
+          setRevealed(true);
+          setShowRevealModal(false);
+        }}
+        title="VOIR MON TIRAGE"
+        confirmText="Oui"
+        cancelText="Non">
+        <Text style={styles.modalWarningIcon}>&#9888;</Text>
+        <Text style={styles.modalText}>
+          Voulez-vous voir qui vous avez tiré ?
+        </Text>
+      </ConfirmationModal>
 
       <ConfirmationModal
         visible={showDrawModal}
@@ -375,6 +359,9 @@ export default function EventDetail() {
         </Text>
         <View style={styles.modalBullets}>
           <Text style={styles.modalBullet}>
+            • Tous les participants seront notifiés par email
+          </Text>
+          <Text style={styles.modalBullet}>
             • Il ne sera plus possible d'ajouter de nouveaux participants
           </Text>
           <Text style={styles.modalBullet}>
@@ -383,63 +370,52 @@ export default function EventDetail() {
         </View>
       </ConfirmationModal>
 
-      <ConfirmationModal
-        visible={showContribModal}
-        onClose={() => setShowContribModal(false)}
-        onConfirm={handleContribute}
-        title="VOTRE PARTICIPATION">
-        <Text style={[styles.modalText, { fontWeight: "bold" }]}>
-          Combien voulez-vous donner ?
-        </Text>
-        <TextInput
-          style={{
-            borderWidth: 1,
-            borderColor: "#d1d1d1",
-            borderRadius: 8,
-            padding: 12,
-            fontSize: 16,
-            marginVertical: 16,
-          }}
-          placeholder="Montant en €"
-          keyboardType="numeric"
-          value={contribAmount}
-          onChangeText={(v) => setContribAmount(v.replace(/[^0-9]/g, ""))}
-        />
-      </ConfirmationModal>
+      <Modal visible={showContribModal} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalBox}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>VOTRE PARTICIPATION</Text>
+              <TouchableOpacity onPress={() => setShowContribModal(false)}>
+                <MaterialIcons name="close" size={24} color="#333" />
+              </TouchableOpacity>
+            </View>
 
-      <ConfirmationModal
-        visible={!!selectedDraw}
-        onClose={() => {
-          setSelectedDraw(null);
-          setDrawRevealed(false);
-        }}
-        onConfirm={() => {
-          if (drawRevealed) {
-            setSelectedDraw(null);
-            setDrawRevealed(false);
-          } else {
-            setDrawRevealed(true);
-          }
-        }}
-        title="TIRAGE AU SORT"
-        confirmText={drawRevealed ? "OK" : "Oui"}
-        cancelText={drawRevealed ? "Fermer" : "Non"}>
-        {!drawRevealed ? (
-          <Text style={styles.modalText}>
-            Voulez-vous voir qui{" "}
-            {selectedDraw?.giver?.pseudo || selectedDraw?.giver?.firstname} a tiré ?
-          </Text>
-        ) : (
-          <>
-            <Text style={styles.modalText}>
-              {selectedDraw?.giver?.pseudo || selectedDraw?.giver?.firstname} a tiré :
+            <Text style={[styles.modalText, { fontWeight: "bold" }]}>
+              Combien voulez-vous donner ?
             </Text>
-            <Text style={[styles.modalTextBold, { fontSize: 20, textAlign: "center" }]}>
-              {selectedDraw?.receiver?.pseudo || selectedDraw?.receiver?.firstname}
-            </Text>
-          </>
-        )}
-      </ConfirmationModal>
+
+            <TextInput
+              style={{
+                borderWidth: 1,
+                borderColor: "#d1d1d1",
+                borderRadius: 8,
+                padding: 12,
+                fontSize: 16,
+                marginVertical: 16,
+              }}
+              placeholder="Montant en €"
+              keyboardType="numeric"
+              value={contribAmount}
+              onChangeText={(v) => setContribAmount(v.replace(/[^0-9]/g, ""))}
+            />
+
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#4ead51",
+                borderRadius: 8,
+                padding: 14,
+                alignItems: "center",
+                width: "100%",
+              }}
+              onPress={handleContribute}>
+              <Text
+                style={{ color: "white", fontWeight: "bold", fontSize: 15 }}>
+                Confirmer
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   );
 }

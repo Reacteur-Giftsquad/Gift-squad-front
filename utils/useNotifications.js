@@ -55,7 +55,7 @@ export default function useNotifications() {
         });
 
         console.log("Push token:", pushToken);
-        await api.put(`/user/modify/${user._id}`, { pushToken });
+        await api.put(`/user/modify/${user._id}`, { pushToken }, { timeout: 15000 });
 
         // When user taps a notification, navigate to invitations
         responseListener.current =
