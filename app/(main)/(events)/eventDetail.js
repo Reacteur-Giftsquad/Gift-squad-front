@@ -5,7 +5,7 @@
 //   - Christmas List: shows each participant's wish list
 // Creator can invite participants by email.
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -15,7 +15,6 @@ import {
   Alert,
   Modal,
   KeyboardAvoidingView,
-  Platform,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import api from "../../../utils/api";
@@ -30,7 +29,6 @@ import SubmitButton from "../../../components/SubmitButton";
 import Title from "../../../components/Title";
 import ConfirmationModal from "../../../components/ConfirmationModal";
 import styles from "../../../styles/eventDetailStyles";
-import { useBehavior } from "../../../utils/useBehavior";
 
 export default function EventDetail() {
   const { id } = useLocalSearchParams();
@@ -43,7 +41,7 @@ export default function EventDetail() {
   const [showDrawModal, setShowDrawModal] = useState(false);
   const [showContribModal, setShowContribModal] = useState(false);
   const [contribAmount, setContribAmount] = useState("");
-  const behaviour = useBehavior();
+  const scrollRef = useRef();
 
   const fetchEvent = async () => {
     try {
@@ -135,10 +133,12 @@ export default function EventDetail() {
 
   return (
     <KeyboardAvoidingView
-      behavior={behaviour}
-      enabled={Platform.OS === "android"}
+      behavior="padding"
       style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        ref={scrollRef}
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled">
         <View style={styles.topSection}>
           <View style={styles.dateBar}>
             <MaterialIcons name="calendar-month" size={20} color="white" />
@@ -273,6 +273,7 @@ export default function EventDetail() {
                   onChangeText={setEmail}
                   keyboardType="email-address"
                   autoCapitalize="none"
+                  onFocus={() => setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100)}
                 />
                 <TouchableOpacity
                   style={styles.addBtn}

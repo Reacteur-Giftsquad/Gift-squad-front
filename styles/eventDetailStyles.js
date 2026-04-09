@@ -15,7 +15,7 @@ export default StyleSheet.create({
   content: {
     padding: 15,
     gap: 15,
-    paddingBottom: 30,
+    paddingBottom: 100,
   },
   topSection: {
     gap: 15,
