@@ -337,52 +337,29 @@ export default function EventDetail() {
         </View>
       </ConfirmationModal>
 
-      <Modal visible={showContribModal} transparent animationType="fade">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalBox}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>VOTRE PARTICIPATION</Text>
-              <TouchableOpacity onPress={() => setShowContribModal(false)}>
-                <MaterialIcons name="close" size={24} color="#333" />
-              </TouchableOpacity>
-            </View>
-
-            <Text style={[styles.modalText, { fontWeight: "bold" }]}>
-              Combien voulez-vous donner ?
-            </Text>
-
-            <TextInput
-              style={{
-                borderWidth: 1,
-                borderColor: "#d1d1d1",
-                borderRadius: 8,
-                padding: 12,
-                fontSize: 16,
-                marginVertical: 16,
-              }}
-              placeholder="Montant en €"
-              keyboardType="numeric"
-              value={contribAmount}
-              onChangeText={(v) => setContribAmount(v.replace(/[^0-9]/g, ""))}
-            />
-
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#4ead51",
-                borderRadius: 8,
-                padding: 14,
-                alignItems: "center",
-                width: "100%",
-              }}
-              onPress={handleContribute}>
-              <Text
-                style={{ color: "white", fontWeight: "bold", fontSize: 15 }}>
-                Confirmer
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <ConfirmationModal
+        visible={showContribModal}
+        onClose={() => setShowContribModal(false)}
+        onConfirm={handleContribute}
+        title="VOTRE PARTICIPATION">
+        <Text style={[styles.modalText, { fontWeight: "bold" }]}>
+          Combien voulez-vous donner ?
+        </Text>
+        <TextInput
+          style={{
+            borderWidth: 1,
+            borderColor: "#d1d1d1",
+            borderRadius: 8,
+            padding: 12,
+            fontSize: 16,
+            marginVertical: 16,
+          }}
+          placeholder="Montant en €"
+          keyboardType="numeric"
+          value={contribAmount}
+          onChangeText={(v) => setContribAmount(v.replace(/[^0-9]/g, ""))}
+        />
+      </ConfirmationModal>
     </KeyboardAvoidingView>
   );
 }
