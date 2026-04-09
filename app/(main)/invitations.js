@@ -2,13 +2,7 @@
 // User can accept or refuse each invitation.
 
 import { useEffect, useState, useCallback } from "react";
-import {
-  Text,
-  View,
-  FlatList,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { Text, View, FlatList, Alert } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Loader from "../../components/Loader";
 import ScreenWithMenu from "../../components/ScreenWithMenu";
