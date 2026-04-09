@@ -11,9 +11,7 @@ import {
   Text,
   ScrollView,
   TextInput,
-  TouchableOpacity,
   Alert,
-  Modal,
   KeyboardAvoidingView,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -206,8 +204,9 @@ export default function EventDetail() {
                     {isYou && <Text style={styles.youLabel}> (vous)</Text>}
                   </Text>
                   {isChristmasList && (
-                    <TouchableOpacity
-                      style={styles.participateBtn}
+                    <SubmitButton
+                      text={isYou ? "Ma liste" : "Liste de souhaits"}
+                      fontSize="sm"
                       onPress={() =>
                         router.push({
                           pathname: "/(main)/wishList",
@@ -218,17 +217,16 @@ export default function EventDetail() {
                             isOwn: isYou ? "true" : "false",
                           },
                         })
-                      }>
-                      <FontAwesome6
-                        name="gift"
-                        size={14}
-                        color="white"
-                        style={{ marginRight: 6 }}
-                      />
-                      <Text style={styles.participateBtnText}>
-                        {isYou ? "Ma liste" : "Liste de souhaits"}
-                      </Text>
-                    </TouchableOpacity>
+                      }
+                      icon={
+                        <FontAwesome6
+                          name="gift"
+                          size={14}
+                          color="white"
+                          style={{ marginRight: 6 }}
+                        />
+                      }
+                    />
                   )}
                   {isSecretSanta && isDrawn && !isYou && (
                     <MaterialIcons
@@ -244,13 +242,11 @@ export default function EventDetail() {
                         {contribution.amount}€
                       </Text>
                     ) : isYou ? (
-                      <TouchableOpacity
-                        style={styles.participateBtn}
-                        onPress={() => setShowContribModal(true)}>
-                        <Text style={styles.participateBtnText}>
-                          Participer
-                        </Text>
-                      </TouchableOpacity>
+                      <SubmitButton
+                        text="Participer"
+                        fontSize="sm"
+                        onPress={() => setShowContribModal(true)}
+                      />
                     ) : (
                       <MaterialIcons
                         name="hourglass-empty"
@@ -275,11 +271,10 @@ export default function EventDetail() {
                   autoCapitalize="none"
                   onFocus={() => setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100)}
                 />
-                <TouchableOpacity
-                  style={styles.addBtn}
-                  onPress={handleAddParticipant}>
-                  <MaterialIcons name="add" size={24} color="white" />
-                </TouchableOpacity>
+                <SubmitButton
+                  onPress={handleAddParticipant}
+                  icon={<MaterialIcons name="add" size={24} color="white" />}
+                />
               </View>
             </>
           )}
@@ -326,9 +321,6 @@ export default function EventDetail() {
         </Text>
         <View style={styles.modalBullets}>
           <Text style={styles.modalBullet}>
-            • Tous les participants seront notifiés par email
-          </Text>
-          <Text style={styles.modalBullet}>
             • Il ne sera plus possible d'ajouter de nouveaux participants
           </Text>
           <Text style={styles.modalBullet}>
@@ -337,52 +329,29 @@ export default function EventDetail() {
         </View>
       </ConfirmationModal>
 
-      <Modal visible={showContribModal} transparent animationType="fade">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalBox}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>VOTRE PARTICIPATION</Text>
-              <TouchableOpacity onPress={() => setShowContribModal(false)}>
-                <MaterialIcons name="close" size={24} color="#333" />
-              </TouchableOpacity>
-            </View>
-
-            <Text style={[styles.modalText, { fontWeight: "bold" }]}>
-              Combien voulez-vous donner ?
-            </Text>
-
-            <TextInput
-              style={{
-                borderWidth: 1,
-                borderColor: "#d1d1d1",
-                borderRadius: 8,
-                padding: 12,
-                fontSize: 16,
-                marginVertical: 16,
-              }}
-              placeholder="Montant en €"
-              keyboardType="numeric"
-              value={contribAmount}
-              onChangeText={(v) => setContribAmount(v.replace(/[^0-9]/g, ""))}
-            />
-
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#4ead51",
-                borderRadius: 8,
-                padding: 14,
-                alignItems: "center",
-                width: "100%",
-              }}
-              onPress={handleContribute}>
-              <Text
-                style={{ color: "white", fontWeight: "bold", fontSize: 15 }}>
-                Confirmer
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <ConfirmationModal
+        visible={showContribModal}
+        onClose={() => setShowContribModal(false)}
+        onConfirm={handleContribute}
+        title="VOTRE PARTICIPATION">
+        <Text style={[styles.modalText, { fontWeight: "bold" }]}>
+          Combien voulez-vous donner ?
+        </Text>
+        <TextInput
+          style={{
+            borderWidth: 1,
+            borderColor: "#d1d1d1",
+            borderRadius: 8,
+            padding: 12,
+            fontSize: 16,
+            marginVertical: 16,
+          }}
+          placeholder="Montant en €"
+          keyboardType="numeric"
+          value={contribAmount}
+          onChangeText={(v) => setContribAmount(v.replace(/[^0-9]/g, ""))}
+        />
+      </ConfirmationModal>
     </KeyboardAvoidingView>
   );
 }

@@ -2,13 +2,7 @@
 // User can accept or refuse each invitation.
 
 import { useEffect, useState, useCallback } from "react";
-import {
-  Text,
-  View,
-  FlatList,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { Text, View, FlatList, Alert } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Loader from "../../components/Loader";
 import ScreenWithMenu from "../../components/ScreenWithMenu";
@@ -20,6 +14,7 @@ import { useAuth } from "../../context/AuthContext";
 import colors from "../../assets/colors/colors.json";
 import convertDate from "../../utils/convertDate";
 import styles from "../../styles/invitationsStyles";
+import SubmitButton from "../../components/SubmitButton";
 
 export default function Invitations() {
   const { user } = useAuth();
@@ -86,18 +81,19 @@ export default function Invitations() {
         </View>
 
         <View style={styles.actions}>
-          <TouchableOpacity
-            style={styles.refuseBtn}
-            onPress={() => handleRespond(item._id, "refuse")}>
-            <MaterialIcons name="close" size={20} color="white" />
-            <Text style={styles.refuseText}>Refuser</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.acceptBtn}
-            onPress={() => handleRespond(item._id, "accept")}>
-            <MaterialIcons name="check" size={20} color="white" />
-            <Text style={styles.acceptText}>Accepter</Text>
-          </TouchableOpacity>
+          <SubmitButton
+            text="Refuser"
+            onPress={() => handleRespond(item._id, "refuse")}
+            bgColor={colors.red}
+            flex
+            icon={<MaterialIcons name="close" size={20} color="white" />}
+          />
+          <SubmitButton
+            text="Accepter"
+            onPress={() => handleRespond(item._id, "accept")}
+            flex
+            icon={<MaterialIcons name="check" size={20} color="white" />}
+          />
         </View>
       </View>
     );

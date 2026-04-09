@@ -4,6 +4,7 @@
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import colors from "../assets/colors/colors.json";
+import SubmitButton from "./SubmitButton";
 
 export default function ConfirmationModal({
   visible,
@@ -28,12 +29,15 @@ export default function ConfirmationModal({
           {children}
 
           <View style={styles.buttons}>
-            <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
-              <Text style={styles.btnText}>{cancelText}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.confirmBtn} onPress={onConfirm}>
-              <Text style={styles.btnText}>{confirmText}</Text>
-            </TouchableOpacity>
+            {onClose && (
+              <SubmitButton
+                text={cancelText}
+                onPress={onClose}
+                bgColor={colors.red}
+                flex
+              />
+            )}
+            <SubmitButton text={confirmText} onPress={onConfirm} flex />
           </View>
         </View>
       </View>
@@ -68,24 +72,5 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: "row",
     gap: 10,
-  },
-  cancelBtn: {
-    flex: 1,
-    backgroundColor: "#e74c3c",
-    borderRadius: 8,
-    padding: 14,
-    alignItems: "center",
-  },
-  confirmBtn: {
-    flex: 1,
-    backgroundColor: colors.green,
-    borderRadius: 8,
-    padding: 14,
-    alignItems: "center",
-  },
-  btnText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 15,
   },
 });

@@ -62,7 +62,7 @@ export default StyleSheet.create({
   },
   cardsContainer: {
     paddingHorizontal: 20,
-    gap: 14,
+    gap: 20,
   },
   activityCard: {
     backgroundColor: "#fff",
@@ -73,6 +73,8 @@ export default StyleSheet.create({
     shadowOpacity: 0.06,
     shadowRadius: 8,
     elevation: 3,
+    flexDirection: "row",
+    gap: 10,
   },
   iconCircle: {
     width: 52,
@@ -80,7 +82,6 @@ export default StyleSheet.create({
     borderRadius: 26,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 12,
   },
   cardLabel: {
     fontSize: 16,

@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { View, Alert } from "react-native";
+import { View } from "react-native";
 import { useRouter } from "expo-router";
 import styles from "../../styles/globals";
 import Header from "../../components/Header";

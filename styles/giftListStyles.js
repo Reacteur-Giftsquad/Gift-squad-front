@@ -22,4 +22,10 @@ export default StyleSheet.create({
     fontSize: 14,
     color: "#666",
   },
+  emptyText: {
+    fontSize: 20,
+    textAlign: "center",
+    padding: 50,
+    color: colors.lightgray,
+  },
 });

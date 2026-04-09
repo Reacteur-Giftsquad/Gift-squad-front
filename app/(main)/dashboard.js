@@ -8,6 +8,7 @@ import { useAuth } from "../../context/AuthContext";
 import ScreenWithMenu from "../../components/ScreenWithMenu";
 import styles from "../../styles/dashboardStyles";
 import colors from "../../assets/colors/colors.json";
+import SubmitButton from "../../components/SubmitButton";
 
 // Available event types shown on the dashboard
 const ACTIVITIES = [
@@ -43,8 +44,7 @@ export default function DashboardScreen() {
       <ScrollView
         style={styles.scrollContainer}
         contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+        showsVerticalScrollIndicator={false}>
         <View style={styles.heroSection}>
           <Text style={styles.welcome}>
             Bienvenue {user?.pseudo || user?.firstname || ""} !
@@ -69,44 +69,31 @@ export default function DashboardScreen() {
                   pathname: "/(main)/(newEvent)/createEvent",
                   params: { type: activity.type },
                 })
-              }
-            >
+              }>
               <View
                 style={[
                   styles.iconCircle,
                   { backgroundColor: activity.color + "18" },
-                ]}
-              >
+                ]}>
                 <FontAwesome6
                   name={activity.icon}
                   size={28}
                   color={activity.color}
                 />
               </View>
-              <Text style={styles.cardLabel}>{activity.label}</Text>
-              <Text style={styles.cardDescription}>
-                {activity.description}
-              </Text>
+              <View style={{ justifyContent: "space-between" }}>
+                <Text style={styles.cardLabel}>{activity.label}</Text>
+                <Text style={styles.cardDescription}>
+                  {activity.description}
+                </Text>
+              </View>
             </TouchableOpacity>
           ))}
+          <SubmitButton
+            text="Voir mes événements"
+            onPress={() => router.push("/(main)/events")}
+          />
         </View>
-
-        <TouchableOpacity
-          style={styles.ctaButton}
-          activeOpacity={0.8}
-          onPress={() => router.push("/(main)/(newEvent)/")}
-        >
-          <FontAwesome6 name="plus" size={16} color="#fff" />
-          <Text style={styles.ctaText}>Créer un événement</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.secondaryButton}
-          activeOpacity={0.8}
-          onPress={() => router.push("/(main)/events")}
-        >
-          <Text style={styles.secondaryButtonText}>Voir mes événements</Text>
-        </TouchableOpacity>
       </ScrollView>
     </ScreenWithMenu>
   );
