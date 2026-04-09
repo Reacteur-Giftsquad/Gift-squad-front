@@ -5,18 +5,19 @@
 //   - Christmas List: shows each participant's wish list
 // Creator can invite participants by email.
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
   View,
   Text,
   ScrollView,
+  RefreshControl,
   TextInput,
   TouchableOpacity,
   Alert,
   Modal,
   KeyboardAvoidingView,
 } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter, useFocusEffect } from "expo-router";
 import api from "../../../utils/api";
 import showError from "../../../utils/showError";
 import { useAuth } from "../../../context/AuthContext";
@@ -41,6 +42,7 @@ export default function EventDetail() {
   const [showDrawModal, setShowDrawModal] = useState(false);
   const [showContribModal, setShowContribModal] = useState(false);
   const [contribAmount, setContribAmount] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
   const scrollRef = useRef();
 
   const handleRemoveMember = (member) => {
@@ -52,9 +54,7 @@ export default function EventDetail() {
         style: "destructive",
         onPress: async () => {
           try {
-            await api.post(`/events/${id}/remove-member`, {
-              userId: member._id,
-            });
+            await api.delete(`/events/${id}/remove-user/${member._id}`);
             fetchEvent();
           } catch (error) {
             showError(error, "Impossible de retirer ce participant");
@@ -81,9 +81,17 @@ export default function EventDetail() {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    fetchEvent();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchEvent();
+    }, []),
+  );
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchEvent();
+    setRefreshing(false);
+  };
 
   const handleAddParticipant = async () => {
     if (!email) return;
@@ -159,7 +167,10 @@ export default function EventDetail() {
       <ScrollView
         ref={scrollRef}
         contentContainerStyle={styles.content}
-        keyboardShouldPersistTaps="handled">
+        keyboardShouldPersistTaps="handled"
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.green]} />
+        }>
         <View style={styles.topSection}>
           <View style={styles.dateBar}>
             <MaterialIcons name="calendar-month" size={20} color="white" />
