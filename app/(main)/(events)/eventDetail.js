@@ -327,7 +327,11 @@ export default function EventDetail() {
                   onPress={() => setShowDrawModal(true)}
                 />
               </>
-            ) : null}
+            ) : (
+              <Text style={styles.warningText}>
+                Le tirage au sort n'a pas encore été effectué. L'organisateur s'en charge !
+              </Text>
+            )}
           </View>
         )}
       </ScrollView>

@@ -15,7 +15,7 @@ export default StyleSheet.create({
   scrollContent: {
     padding: 20,
     gap: 25,
-    paddingBlockEnd: 170 + navigationBar,
+    paddingBlockEnd: 185 + navigationBar,
   },
   center: {
     alignItems: "center",
