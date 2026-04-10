@@ -22,6 +22,7 @@ export default function Invitations() {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchInvitations = useCallback(async () => {
+    if (!user) return;
     try {
       const { data } = await api.get(`/invitation/${user._id}`);
       setInvitations(data);
@@ -29,7 +30,7 @@ export default function Invitations() {
       Alert.alert("Erreur", "Impossible de charger les invitations");
     }
     setIsLoading(false);
-  }, [user._id]);
+  }, [user?._id]);
 
   useEffect(() => {
     fetchInvitations();
