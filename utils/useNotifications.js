@@ -68,11 +68,8 @@ export default function useNotifications() {
 
     setup();
 
-    // Cleanup listener on unmount
     return () => {
-      if (responseListener.current) {
-        responseListener.current.remove();
-      }
+      responseListener.current.remove();
     };
   }, [user]);
 }
