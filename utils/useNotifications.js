@@ -71,7 +71,7 @@ export default function useNotifications() {
     // Cleanup listener on unmount
     return () => {
       if (responseListener.current) {
-        Notifications.removeNotificationSubscription(responseListener.current);
+        responseListener.current.remove();
       }
     };
   }, [user]);
