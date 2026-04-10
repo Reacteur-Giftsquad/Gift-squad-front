@@ -1,5 +1,5 @@
 // AuthContext: manages user authentication state across the app.
-// Persists token + user data in AsyncStorage so sessions survive app restarts.
+// Persists token + user data in AsyncStorage so sessions survive after restarting the app.
 
 import { createContext, useState, useEffect, useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,12 +16,6 @@ export function AuthProvider({ children }) {
     const restoreSession = async () => {
       const savedToken = await AsyncStorage.getItem("token");
       const savedUser = await AsyncStorage.getItem("user");
-      console.log(
-        "Restore session - token:",
-        savedToken ? "found" : "none",
-        "user:",
-        savedUser,
-      );
       if (savedToken && savedUser) {
         setToken(savedToken);
         setUser(JSON.parse(savedUser));
@@ -39,7 +33,7 @@ export function AuthProvider({ children }) {
     await AsyncStorage.setItem("user", JSON.stringify(userData));
   };
 
-  // Update user data (e.g. after profile edit) without changing the token
+  // Update user data (after profile edit) without changing the token
   const updateUser = async (userData) => {
     setUser(userData);
     await AsyncStorage.setItem("user", JSON.stringify(userData));

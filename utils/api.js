@@ -28,7 +28,6 @@ const baseURLReady = (async () => {
   }
 
   api.defaults.baseURL = baseURL;
-  console.log("API using:", baseURL);
 })();
 
 api.interceptors.request.use(async (config) => {

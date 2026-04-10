@@ -54,7 +54,6 @@ export default function useNotifications() {
           projectId: Constants.expoConfig?.extra?.eas?.projectId,
         });
 
-        console.log("Push token:", pushToken);
         await api.put(`/user/modify/${user._id}`, { pushToken }, { timeout: 15000 });
 
         // When user taps a notification, navigate to invitations
@@ -63,7 +62,7 @@ export default function useNotifications() {
             router.push("/(main)/invitations");
           });
       } catch (error) {
-        console.log("Notifications setup skipped:", error.message);
+        // Notifications not available (e.g. Expo Go)
       }
     };
 
